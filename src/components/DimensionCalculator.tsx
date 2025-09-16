@@ -12,8 +12,8 @@ interface DimensionCalculatorProps {
 }
 
 export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
-  const [width, setWidth] = useState<number>(100);
-  const [height, setHeight] = useState<number>(100);
+  const [width, setWidth] = useState<number | ''>('');
+  const [height, setHeight] = useState<number | ''>('');
   const [material, setMaterial] = useState<Material>('vinil');
 
   // Ensure initial values are sent to parent on mount
@@ -23,31 +23,41 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
   }, []);
 
   const handleWidthChange = (value: string) => {
+    if (value === '') {
+      setWidth('');
+      onChange(0, typeof height === 'number' ? height : 0, material);
+      return;
+    }
+
     const num = parseFloat(value);
-    // If invalid input, keep current value
     if (isNaN(num)) return;
 
     // Clamp width between 1 and 160 cm
     const clampedWidth = Math.max(1, Math.min(160, num));
     setWidth(clampedWidth);
-    onChange(clampedWidth, height, material);
+    onChange(clampedWidth, typeof height === 'number' ? height : 0, material);
   };
 
   const handleHeightChange = (value: string) => {
+    if (value === '') {
+      setHeight('');
+      onChange(typeof width === 'number' ? width : 0, 0, material);
+      return;
+    }
+
     const num = parseFloat(value);
-    // If invalid input, keep current value
     if (isNaN(num)) return;
 
     // Clamp height between 10 and 3600 cm
     const clampedHeight = Math.max(10, Math.min(3600, num));
     setHeight(clampedHeight);
-    onChange(width, clampedHeight, material);
+    onChange(typeof width === 'number' ? width : 0, clampedHeight, material);
   };
 
   const handleMaterialChange = (checked: boolean) => {
     const newMaterial = checked ? 'lona' : 'vinil';
     setMaterial(newMaterial);
-    onChange(width, height, newMaterial);
+    onChange(typeof width === 'number' ? width : 0, typeof height === 'number' ? height : 0, newMaterial);
   };
 
   return (
@@ -69,9 +79,9 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
                onChange={(e) => handleWidthChange(e.target.value)}
                min="1"
                max="160"
-               placeholder="100"
+               placeholder="Ej: 100"
                className={`border-2 focus:border-primary ${
-                 width <= 1 || width >= 160
+                 (typeof width === 'number' && (width <= 1 || width >= 160))
                    ? 'border-orange-400 bg-orange-50 dark:bg-orange-900/20'
                    : 'border-border/80'
                }`}
@@ -87,9 +97,9 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
                onChange={(e) => handleHeightChange(e.target.value)}
                min="10"
                max="3600"
-               placeholder="100"
+               placeholder="Ej: 100"
                className={`border-2 focus:border-primary ${
-                 height <= 10 || height >= 3600
+                 (typeof height === 'number' && (height <= 10 || height >= 3600))
                    ? 'border-orange-400 bg-orange-50 dark:bg-orange-900/20'
                    : 'border-border/80'
                }`}
@@ -126,7 +136,7 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
 
         <div className="text-xs text-muted-foreground bg-muted/50 p-1 rounded-md border-2 border-border/80 shadow-sm">
            <Ruler className="inline h-3 w-3 mr-1" />
-           Área: {((width * height) / 10000).toFixed(2)} m²
+           Área: {((typeof width === 'number' ? width : 0) * (typeof height === 'number' ? height : 0) / 10000).toFixed(2)} m²
          </div>
       </CardContent>
     </Card>
