@@ -19,7 +19,7 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
   // Ensure initial values are sent to parent on mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    onChange(width, height, material);
+    onChange(Number(width), Number(height), material);
   }, []);
 
   const handleWidthChange = (value: string) => {
