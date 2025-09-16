@@ -1,36 +1,159 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Printología - Cotización de Impresión Gran Formato
 
-## Getting Started
+Una aplicación web moderna y elegante para cotizar impresiones de gran formato desarrollada con Next.js 14+.
 
-First, run the development server:
+## ✨ Características Destacadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 🎨 **Modo Dark/Light** - Toggle para cambiar entre temas
+- 📱 **Layout Fijo sin Scroll** - Diseño optimizado para 100vh/100vw
+- 🖥️ **Grid Layout Responsivo** - 3 columnas en desktop, tabs en mobile
+- 🎯 **Sidebar Izquierdo** - Calculadora y subida de archivos
+- 👁️ **Panel Central** - Preview del PDF con visor integrado
+- 💰 **Panel Derecho** - Cotización y formulario de contacto
+- ✨ **Animaciones Suaves** - Micro-interacciones y transiciones
+- 🔄 **Cálculos en Tiempo Real** - Actualización automática de precios
+- 📄 **Preview de PDF** - Visor integrado sin librerías problemáticas
+
+## 🚀 Características
+
+- **SPA sin scroll** - Toda la funcionalidad en un viewport
+- **Responsive Design** - 3 columnas en desktop, tabs en mobile
+- **Cálculos en tiempo real** - Precios dinámicos con descuentos por volumen
+- **Preview de PDF** - Visualización integrada con zoom y navegación
+- **Validación completa** - Formularios con Zod y React Hook Form
+- **Envío de correos** - Integración con EmailJS
+- **UI moderna** - Componentes shadcn/ui con Tailwind CSS
+
+## 🛠️ Stack Tecnológico
+
+- **Next.js 14+** - Framework React con App Router
+- **TypeScript** - Tipado estático
+- **Tailwind CSS 4.0** - Estilos utilitarios
+- **shadcn/ui** - Componentes UI
+- **React Hook Form** - Manejo de formularios
+- **Zod** - Validación de esquemas
+- **PDF.js** - Visualización de PDFs
+- **EmailJS** - Envío de correos
+
+## 📋 Requisitos de Negocio
+
+- **Máquinas**: Ancho máximo 160cm, largo hasta 360cm
+- **Precios**:
+  - Vinil: $180 MXN/m² (normal), $140 MXN/m² (>10m²)
+  - Lona: $80 MXN/m² (normal), $65 MXN/m² (>10m²)
+- **IVA**: 16%
+- **Archivos**: Solo PDFs, máximo 50MB
+
+## 🏗️ Estructura del Proyecto
+
+```
+src/
+├── app/
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── ui/ (shadcn components)
+│   ├── DimensionCalculator.tsx
+│   ├── FileUpload.tsx
+│   ├── PDFPreview.tsx
+│   ├── QuoteDisplay.tsx
+│   ├── ContactForm.tsx
+│   └── ErrorBoundary.tsx
+├── lib/
+│   ├── utils.ts
+│   ├── calculations.ts
+│   ├── validations.ts
+│   └── email-service.ts
+└── types/
+    └── index.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Instalación y Configuración
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Instalar dependencias**:
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Configurar shadcn/ui**:
+   ```bash
+   npx shadcn@latest init --yes
+   npx shadcn@latest add input label switch card button tabs textarea form alert separator badge
+   ```
 
-## Learn More
+3. **Configurar EmailJS**:
+   - Crear cuenta en [emailjs.com](https://emailjs.com)
+   - Configurar variables de entorno en `.env.local`:
+   ```env
+   NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+   NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+   NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Ejecutar el proyecto**:
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎨 Diseño y Layout Optimizado
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Desktop (1200px+) - Layout Fijo sin Scroll:
+```
+┌─────────────────────────────────────────────────┐
+│  HEADER: Printología + Theme Toggle            │
+├─────────────┬─────────────────┬─────────────────┤
+│             │                 │                 │
+│  SIDEBAR    │   PDF PREVIEW   │   QUOTE &       │
+│  IZQUIERDO  │   PANEL         │   CONTACT       │
+│             │                 │                 │
+│  • Inputs   │  • PDF Viewer   │  • Cotización   │
+│  • Material │  • File Info    │  • Formulario   │
+│  • Upload   │  • Actions      │  • Envío        │
+│             │                 │                 │
+└─────────────┴─────────────────┴─────────────────┘
+```
 
-## Deploy on Vercel
+### Mobile/Tablet - Sistema de Tabs:
+- 📱 **Tab 1**: Calculadora + Upload
+- 👁️ **Tab 2**: PDF Preview
+- 💰 **Tab 3**: Cotización + Contacto
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🎯 Características del Diseño:
+- **100vh/100vw** - Layout completamente fijo
+- **Glassmorphism** - Efectos de vidrio translúcido
+- **Animaciones** - Micro-interacciones suaves
+- **Modo Dark** - Tema oscuro completo
+- **Responsive** - Adaptable a todos los dispositivos
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📧 Funcionalidades del Formulario
+
+- Validación completa con Zod
+- Estados de loading, success, error
+- Adjunto automático del PDF al correo
+- Reseteo automático después del envío exitoso
+
+## 🎯 Funcionalidades Implementadas
+
+### ✅ Completadas:
+- [x] **Modo Dark/Light** - Toggle completo con persistencia
+- [x] **Layout Fijo** - 100vh/100vw sin scroll
+- [x] **Grid Layout Optimizado** - 3 columnas fijas
+- [x] **Sidebar Izquierdo** - Calculadora + Upload
+- [x] **Panel Central** - PDF Preview con visor integrado
+- [x] **Panel Derecho** - Cotización + Formulario
+- [x] **Glassmorphism** - Efectos de vidrio modernos
+- [x] **Animaciones** - Micro-interacciones suaves
+- [x] **PDF Preview** - Visor nativo sin problemas
+- [x] **Responsive Design** - Desktop + Mobile optimizado
+
+### 🔄 Próximos Pasos (Opcionales):
+- [ ] Configurar EmailJS para envío de correos
+- [ ] Añadir persistencia de datos localStorage
+- [ ] Implementar PWA features
+- [ ] Añadir más tipos de material
+- [ ] Desplegar en Vercel
+
+## 📄 Licencia
+
+Este proyecto está desarrollado para Printología.
