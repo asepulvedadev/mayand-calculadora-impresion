@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ContactFormData, QuoteData } from '@/types';
 import { contactSchema } from '@/lib/validations';
 import { Send } from 'lucide-react';
-import emailjs from '@emailjs/browser';
+import resend from '@/lib/resend';
 
 interface ContactFormProps {
   quote: QuoteData | null;
@@ -163,24 +163,17 @@ export function ContactForm({ quote, pdfFile }: ContactFormProps) {
         </html>
       `;
 
-      const templateParams = {
-        to_name: 'Printología',
-        from_name: data.name,
-        from_email: data.email,
-        phone: data.phone,
-        message: data.message,
-        html_content: htmlTemplate,
-        pdf_filename: pdfFile.name,
-        pdf_size: `${(pdfFile.size / 1024 / 1024).toFixed(2)} MB`,
-        quote_summary: `Cotización: ${quote.width}cm × ${quote.height}cm, ${quote.material === 'vinil' ? 'Vinil' : 'Lona'}, Total: $${quote.total.toFixed(2)} MXN`
-      };
+      const { data: emailData, error } = await resend.emails.send({
+        from: 'Printología <onboarding@resend.dev>', // You'll need to verify your domain
+        to: ['contacto@printologia.com'], // Replace with your email
+        subject: `Nueva Cotización - ${data.name}`,
+        html: htmlTemplate,
+        replyTo: data.email,
+      });
 
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        templateParams,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      );
+      if (error) {
+        throw new Error(error.message);
+      }
 
       setSubmitStatus('success');
       form.reset();
