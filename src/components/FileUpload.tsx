@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Upload, FileText, X } from 'lucide-react';
+import { FileText, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface FileUploadProps {

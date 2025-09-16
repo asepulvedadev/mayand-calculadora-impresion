@@ -8,13 +8,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ContactFormData } from '@/types';
+import { ContactFormData, QuoteData } from '@/types';
 import { contactSchema } from '@/lib/validations';
-import { MessageSquare, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
 interface ContactFormProps {
-  quote: any;
+  quote: QuoteData | null;
   pdfFile: File | null;
 }
 
