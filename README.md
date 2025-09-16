@@ -21,7 +21,7 @@ Una aplicación web moderna y elegante para cotizar impresiones de gran formato 
 - **Cálculos en tiempo real** - Precios dinámicos con descuentos por volumen
 - **Preview de PDF** - Visualización integrada con zoom y navegación
 - **Validación completa** - Formularios con Zod y React Hook Form
-- **Envío de correos** - Integración con Resend (EmailJS alternativo)
+- **Envío de correos** - Integración con EmailJS
 - **UI moderna** - Componentes shadcn/ui con Tailwind CSS
 
 ## 🛠️ Stack Tecnológico
@@ -33,7 +33,7 @@ Una aplicación web moderna y elegante para cotizar impresiones de gran formato 
 - **React Hook Form** - Manejo de formularios
 - **Zod** - Validación de esquemas
 - **PDF.js** - Visualización de PDFs
-- **Resend** - Envío de correos moderno
+- **EmailJS** - Envío de correos
 
 ## 📋 Requisitos de Negocio
 
@@ -82,13 +82,13 @@ src/
    npx shadcn@latest add input label switch card button tabs textarea form alert separator badge
    ```
 
-3. **Configurar Resend**:
-   - Crear cuenta en [resend.com](https://resend.com)
-   - Verificar tu dominio de email
-   - Obtener API Key desde el dashboard
+3. **Configurar EmailJS**:
+   - Crear cuenta en [emailjs.com](https://emailjs.com)
    - Configurar variables de entorno en `.env.local`:
    ```env
-   RESEND_API_KEY=your_resend_api_key
+   NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+   NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+   NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
    ```
 
 4. **Ejecutar el proyecto**:
@@ -148,7 +148,7 @@ src/
 - [x] **Responsive Design** - Desktop + Mobile optimizado
 
 ### 🔄 Próximos Pasos (Opcionales):
-- [x] Configurar Resend para envío de correos
+- [ ] Configurar EmailJS para envío de correos
 - [ ] Añadir persistencia de datos localStorage
 - [ ] Implementar PWA features
 - [ ] Añadir más tipos de material
