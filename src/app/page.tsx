@@ -20,8 +20,11 @@ import {
 import Image from 'next/image';
 
 export default function Home() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [width, setWidth] = useState(100);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [height, setHeight] = useState(100);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [material, setMaterial] = useState<Material>('vinil');
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [quote, setQuote] = useState<QuoteData | null>(null);
