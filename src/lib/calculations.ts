@@ -1,9 +1,9 @@
 import { Material, QuoteData } from '@/types';
 
 const PRICES = {
-  vinil: { normal: 180, bulk: 140 },
+  vinil: { normal: 120, bulk: 100 },
   lona: { normal: 80, bulk: 65 },
-  vinil_transparente: { normal: 180, bulk: 140 }
+  vinil_transparente: { normal: 120, bulk: 100 }
 };
 
 export const calculateQuote = (width: number, height: number, material: Material): QuoteData => {
