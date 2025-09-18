@@ -1,7 +1,7 @@
 {
-  "name": "Printología - Cotización de Impresión",
-  "short_name": "Printología",
-  "description": "Cotiza tu impresión gran formato con Printología. Máquinas de hasta 160cm de ancho y 360cm de largo.",
+  "name": "Mayand - Cotización de Impresión",
+  "short_name": "Mayand",
+  "description": "Cotiza tu impresión gran formato con Mayand. Máquinas de hasta 160cm de ancho y 360cm de largo.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#110363",

@@ -1,4 +1,4 @@
-export type Material = 'vinil' | 'lona';
+export type Material = 'vinil' | 'lona' | 'vinil_transparente';
 
 export interface QuoteData {
   width: number;
@@ -10,11 +10,4 @@ export interface QuoteData {
   iva: number;
   total: number;
   hasBulkDiscount: boolean;
-}
-
-export interface ContactFormData {
-  name: string;
-  email: string;
-  phone: string;
-  message?: string;
 }

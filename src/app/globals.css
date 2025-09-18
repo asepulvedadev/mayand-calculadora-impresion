@@ -43,7 +43,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Custom styles for Printología */
+/* Custom styles for Mayand */
 .glassmorphism {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);

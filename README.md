@@ -1,48 +1,54 @@
-# Printología - Cotización de Impresión Gran Formato
+# Mayand - Cotización de Impresión Gran Formato
 
-Una aplicación web moderna y elegante para cotizar impresiones de gran formato desarrollada con Next.js 14+.
+Una aplicación web moderna y elegante para cotizar impresiones de gran formato desarrollada con Next.js 14+. Aplicación PWA optimizada para dispositivos móviles y desktop.
 
 ## ✨ Características Destacadas
 
-- 🎨 **Modo Dark/Light** - Toggle para cambiar entre temas
+- 📱 **Aplicación PWA** - Instalable en dispositivos móviles y desktop
+- 🎨 **Tema Dark Optimizado** - Diseño moderno con colores personalizados
 - 📱 **Layout Fijo sin Scroll** - Diseño optimizado para 100vh/100vw
-- 🖥️ **Grid Layout Responsivo** - 3 columnas en desktop, tabs en mobile
-- 🎯 **Sidebar Izquierdo** - Calculadora y subida de archivos
-- 👁️ **Panel Central** - Preview del PDF con visor integrado
-- 💰 **Panel Derecho** - Cotización y formulario de contacto
+- 🖥️ **Grid Layout Responsivo** - 2 columnas en desktop, diseño móvil optimizado
+- 🎯 **Calculadora Inteligente** - Cálculos automáticos con validaciones
+- 💰 **Cotización en Tiempo Real** - Precios dinámicos por material
+- 📱 **WhatsApp Integration** - Compartir cotizaciones directamente
 - ✨ **Animaciones Suaves** - Micro-interacciones y transiciones
 - 🔄 **Cálculos en Tiempo Real** - Actualización automática de precios
-- 📄 **Preview de PDF** - Visor integrado sin librerías problemáticas
+- 📏 **Unidades Dinámicas** - Metros lineales para vinil, metros cuadrados para lona
 
 ## 🚀 Características
 
+- **Aplicación PWA** - Instalación en dispositivos móviles y desktop
 - **SPA sin scroll** - Toda la funcionalidad en un viewport
-- **Responsive Design** - 3 columnas en desktop, tabs en mobile
-- **Cálculos en tiempo real** - Precios dinámicos con descuentos por volumen
-- **Preview de PDF** - Visualización integrada con zoom y navegación
-- **Validación completa** - Formularios con Zod y React Hook Form
-- **Envío de correos** - Integración con EmailJS
-- **UI moderna** - Componentes shadcn/ui con Tailwind CSS
+- **Responsive Design** - 2 columnas en desktop, diseño móvil optimizado
+- **Cálculos en tiempo real** - Precios dinámicos por material y dimensiones
+- **Materiales múltiples** - Vinil, Vinil Transparente y Lona con precios diferenciados
+- **Unidades inteligentes** - Metros lineales para vinil, metros cuadrados para lona
+- **WhatsApp sharing** - Compartir cotizaciones directamente por WhatsApp
+- **Validación completa** - Validaciones de dimensiones por material
+- **UI moderna** - Componentes shadcn/ui con Tailwind CSS y tema personalizado
 
 ## 🛠️ Stack Tecnológico
 
 - **Next.js 14+** - Framework React con App Router
 - **TypeScript** - Tipado estático
-- **Tailwind CSS 4.0** - Estilos utilitarios
-- **shadcn/ui** - Componentes UI
-- **React Hook Form** - Manejo de formularios
-- **Zod** - Validación de esquemas
-- **PDF.js** - Visualización de PDFs
-- **EmailJS** - Envío de correos
+- **Tailwind CSS 4.0** - Estilos utilitarios con tema personalizado
+- **shadcn/ui** - Componentes UI modernos
+- **PWA** - Service Worker y Web App Manifest
+- **WhatsApp API** - Integración para compartir cotizaciones
+- **React State Management** - useState y useEffect para estado local
 
 ## 📋 Requisitos de Negocio
 
-- **Máquinas**: Ancho máximo 160cm, largo hasta 360cm
+- **Dimensiones Máximas**:
+  - Vinil: Ancho máximo 150cm, largo hasta 360cm
+  - Vinil Transparente: Ancho máximo 150cm, largo hasta 360cm
+  - Lona: Ancho máximo 180cm, largo hasta 360cm
 - **Precios**:
-  - Vinil: $180 MXN/m² (normal), $140 MXN/m² (>10m²)
+  - Vinil: $180 MXN/metro lineal (altura)
+  - Vinil Transparente: $180 MXN/metro lineal (altura)
   - Lona: $80 MXN/m² (normal), $65 MXN/m² (>10m²)
 - **IVA**: 16%
-- **Archivos**: Solo PDFs, máximo 50MB
+- **Unidades**: Metros lineales para vinil, metros cuadrados para lona
 
 ## 🏗️ Estructura del Proyecto
 
@@ -55,18 +61,19 @@ src/
 ├── components/
 │   ├── ui/ (shadcn components)
 │   ├── DimensionCalculator.tsx
-│   ├── FileUpload.tsx
-│   ├── PDFPreview.tsx
 │   ├── QuoteDisplay.tsx
-│   ├── ContactForm.tsx
+│   ├── PWA.tsx
 │   └── ErrorBoundary.tsx
 ├── lib/
 │   ├── utils.ts
 │   ├── calculations.ts
-│   ├── validations.ts
-│   └── email-service.ts
-└── types/
-    └── index.ts
+│   └── validations.ts
+├── types/
+│   └── index.ts
+└── public/
+    ├── manifest.json
+    ├── sw.js
+    └── icons/ (PWA icons)
 ```
 
 ## 🚀 Instalación y Configuración
@@ -82,14 +89,6 @@ src/
    npx shadcn@latest add input label switch card button tabs textarea form alert separator badge
    ```
 
-3. **Configurar EmailJS**:
-   - Crear cuenta en [emailjs.com](https://emailjs.com)
-   - Configurar variables de entorno en `.env.local`:
-   ```env
-   NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
-   NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
-   NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
-   ```
 
 4. **Ejecutar el proyecto**:
    ```bash
@@ -98,62 +97,70 @@ src/
 
 ## 🎨 Diseño y Layout Optimizado
 
-### Desktop (1200px+) - Layout Fijo sin Scroll:
+### Desktop (1200px+) - Layout Optimizado:
 ```
 ┌─────────────────────────────────────────────────┐
-│  HEADER: Printología + Theme Toggle            │
-├─────────────┬─────────────────┬─────────────────┤
-│             │                 │                 │
-│  SIDEBAR    │   PDF PREVIEW   │   QUOTE &       │
-│  IZQUIERDO  │   PANEL         │   CONTACT       │
-│             │                 │                 │
-│  • Inputs   │  • PDF Viewer   │  • Cotización   │
-│  • Material │  • File Info    │  • Formulario   │
-│  • Upload   │  • Actions      │  • Envío        │
-│             │                 │                 │
-└─────────────┴─────────────────┴─────────────────┘
+│  HEADER: Mayand + WhatsApp Share               │
+├─────────────────────────┬───────────────────────┤
+│                         │                       │
+│  CALCULADORA            │   COTIZACIÓN          │
+│  INTELIGENTE            │   EN TIEMPO REAL      │
+│                         │                       │
+│  • Dimensiones          │  • Precio Unitario    │
+│  • Material             │  • Subtotal           │
+│  • Validaciones         │  • IVA                │
+│  • Unidades             │  • Total              │
+│                         │                       │
+└─────────────────────────┴───────────────────────┘
 ```
 
-### Mobile/Tablet - Sistema de Tabs:
-- 📱 **Tab 1**: Calculadora + Upload
-- 👁️ **Tab 2**: PDF Preview
-- 💰 **Tab 3**: Cotización + Contacto
+### Mobile - Diseño Optimizado:
+- 📱 **Vista Unificada**: Calculadora y cotización en una sola vista
+- 🎯 **Navegación Intuitiva**: Diseño mobile-first responsive
+- 📱 **PWA Ready**: Instalable en dispositivos móviles
 
 ### 🎯 Características del Diseño:
 - **100vh/100vw** - Layout completamente fijo
 - **Glassmorphism** - Efectos de vidrio translúcido
 - **Animaciones** - Micro-interacciones suaves
-- **Modo Dark** - Tema oscuro completo
-- **Responsive** - Adaptable a todos los dispositivos
+- **Tema Personalizado** - Color #110363 como base
+- **PWA** - Instalable en dispositivos móviles
+- **Responsive** - Diseño mobile-first optimizado
+- **WhatsApp Integration** - Compartir cotizaciones fácilmente
 
-## 📧 Funcionalidades del Formulario
+## 📱 Funcionalidades PWA y WhatsApp
 
-- Validación completa con Zod
-- Estados de loading, success, error
-- Adjunto automático del PDF al correo
-- Reseteo automático después del envío exitoso
+- **Instalación PWA** - Aplicación instalable en dispositivos móviles
+- **Offline Support** - Service Worker para funcionamiento offline
+- **WhatsApp Sharing** - Compartir cotizaciones directamente por WhatsApp
+- **Responsive Design** - Optimizado para móviles y desktop
+- **Fast Loading** - Carga rápida y optimizada
 
 ## 🎯 Funcionalidades Implementadas
 
-### ✅ Completadas:
-- [x] **Modo Dark/Light** - Toggle completo con persistencia
+### ✅ Características Implementadas:
+- [x] **Aplicación PWA** - Instalable con Service Worker y Manifest
+- [x] **Tema Dark Personalizado** - Color #110363 como tema base
 - [x] **Layout Fijo** - 100vh/100vw sin scroll
-- [x] **Grid Layout Optimizado** - 3 columnas fijas
-- [x] **Sidebar Izquierdo** - Calculadora + Upload
-- [x] **Panel Central** - PDF Preview con visor integrado
-- [x] **Panel Derecho** - Cotización + Formulario
+- [x] **Grid Layout Optimizado** - 2 columnas en desktop
+- [x] **Calculadora Inteligente** - Validaciones por material
+- [x] **Cotización en Tiempo Real** - Cálculos automáticos
+- [x] **WhatsApp Sharing** - Compartir cotizaciones por WhatsApp
+- [x] **Materiales Múltiples** - Vinil, Vinil Transparente y Lona
+- [x] **Unidades Dinámicas** - Metros lineales/cuadrados según material
 - [x] **Glassmorphism** - Efectos de vidrio modernos
 - [x] **Animaciones** - Micro-interacciones suaves
-- [x] **PDF Preview** - Visor nativo sin problemas
-- [x] **Responsive Design** - Desktop + Mobile optimizado
+- [x] **Responsive Design** - Mobile-first optimizado
 
-### 🔄 Próximos Pasos (Opcionales):
-- [ ] Configurar EmailJS para envío de correos
-- [ ] Añadir persistencia de datos localStorage
-- [ ] Implementar PWA features
+### 🔄 Mejoras Futuras (Opcionales):
+- [ ] Añadir persistencia de datos con localStorage
+- [ ] Implementar notificaciones push
 - [ ] Añadir más tipos de material
-- [ ] Desplegar en Vercel
+- [ ] Crear sistema de descuentos por volumen
+- [ ] Implementar modo offline avanzado
+- [ ] Añadir historial de cotizaciones
+- [ ] Desplegar en Vercel/Netlify
 
 ## 📄 Licencia
 
-Este proyecto está desarrollado para Printología.
+Este proyecto está desarrollado para Mayand.

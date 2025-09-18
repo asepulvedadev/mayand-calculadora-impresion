@@ -15,10 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Printología - Cotización de Impresión Gran Formato",
-  description: "Cotiza tu impresión gran formato con Printología. Máquinas de hasta 160cm de ancho y 360cm de largo. Precios competitivos para vinil y lona.",
-  keywords: "impresión gran formato, vinil, lona, cotización, Printología, México",
-  authors: [{ name: "Printología" }],
+  title: "Mayand - Cotización de Impresión Gran Formato",
+  description: "Cotiza tu impresión gran formato con Mayand. Máquinas de hasta 160cm de ancho y 360cm de largo. Precios competitivos para vinil y lona.",
+  keywords: "impresión gran formato, vinil, lona, cotización, Mayand, México",
+  authors: [{ name: "Mayand" }],
   manifest: '/manifest.json',
   themeColor: '#110363',
 };

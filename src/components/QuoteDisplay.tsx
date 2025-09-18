@@ -33,13 +33,19 @@ export function QuoteDisplay({ quote }: QuoteDisplayProps) {
       <div className="flex-1 flex flex-col justify-between space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-muted/50 p-3 rounded-lg border border-border/60">
-            <p className="text-sm text-muted-foreground">Área calculada</p>
-            <p className="text-2xl font-bold">{quote.area.toFixed(2)} m²</p>
+            <p className="text-sm text-muted-foreground">
+              {quote.material === 'vinil' || quote.material === 'vinil_transparente' ? 'Metros lineales' : 'Área calculada'}
+            </p>
+            <p className="text-2xl font-bold">
+              {quote.area.toFixed(2)} {quote.material === 'vinil' || quote.material === 'vinil_transparente' ? 'm' : 'm²'}
+            </p>
           </div>
           <div className="bg-muted/50 p-3 rounded-lg border border-border/60">
             <p className="text-sm text-muted-foreground">Material</p>
-            <Badge variant={quote.material === 'vinil' ? 'default' : 'secondary'} className="mt-1">
-              {quote.material === 'vinil' ? 'Vinil' : 'Lona'}
+            <Badge variant={quote.material === 'vinil' || quote.material === 'vinil_transparente' ? 'default' : 'secondary'} className="mt-1">
+              {quote.material === 'vinil' ? 'Vinil' :
+               quote.material === 'vinil_transparente' ? 'Vinil Transparente' :
+               'Lona'}
             </Badge>
           </div>
         </div>
@@ -49,12 +55,12 @@ export function QuoteDisplay({ quote }: QuoteDisplayProps) {
         <div className="space-y-2">
           <div className="flex justify-between">
             <span>Precio unitario</span>
-            <span>${quote.unitPrice.toFixed(2)} MXN/m²</span>
+            <span>${quote.unitPrice.toFixed(2)} MXN/{quote.material === 'vinil' || quote.material === 'vinil_transparente' ? 'm' : 'm²'}</span>
           </div>
           {quote.hasBulkDiscount && (
             <div className="flex justify-between text-green-600">
-              <span>Descuento (≥10m²)</span>
-              <span>-${((quote.material === 'vinil' ? 180 : 80) - quote.unitPrice).toFixed(2)}</span>
+              <span>Descuento ({quote.material === 'vinil' || quote.material === 'vinil_transparente' ? '≥10m' : '≥10m²'})</span>
+              <span>-${((quote.material === 'vinil' || quote.material === 'vinil_transparente' ? 180 : 80) - quote.unitPrice).toFixed(2)}</span>
             </div>
           )}
           <div className="flex justify-between font-medium">
