@@ -1,0 +1,20 @@
+{
+  "name": "Printología - Cotización de Impresión",
+  "short_name": "Printología",
+  "description": "Cotiza tu impresión gran formato con Printología. Máquinas de hasta 160cm de ancho y 360cm de largo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#110363",
+  "theme_color": "#110363",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity"],
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/LOGO_DARK.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -7,10 +7,9 @@ import { DimensionCalculator } from '@/components/DimensionCalculator';
 import { FileUpload } from '@/components/FileUpload';
 import { PDFPreview } from '@/components/PDFPreview';
 import { QuoteDisplay } from '@/components/QuoteDisplay';
-import { ContactModal } from '@/components/ContactModal';
 import { calculateQuote } from '@/lib/calculations';
 import { Material, QuoteData } from '@/types';
-import { Moon, Sun, Monitor, Menu } from 'lucide-react';
+import { Menu, MessageCircle } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,9 +27,7 @@ export default function Home() {
   const [material, setMaterial] = useState<Material>('vinil');
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [quote, setQuote] = useState<QuoteData | null>(null);
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('dark');
-  const [currentLogo, setCurrentLogo] = useState('/logo_dark.svg');
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [currentLogo] = useState('/LOGO_DARK.svg');
 
   const handleDimensionChange = (newWidth: number, newHeight: number, newMaterial: Material) => {
     setWidth(newWidth);
@@ -40,22 +37,48 @@ export default function Home() {
     setQuote(newQuote);
   };
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
+  const shareOnWhatsApp = () => {
+    if (!quote) return;
 
-    let actualTheme: 'light' | 'dark';
-    if (theme === 'system') {
-      actualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.classList.add(actualTheme);
+    const message = `🖨️ *Cotización Printología*
+
+📏 *Dimensiones:*
+• Ancho: ${width} cm
+• Alto: ${height} cm
+• Área: ${quote.area.toFixed(2)} m²
+
+🏷️ *Material:* ${quote.material === 'vinil' ? 'Vinil' : 'Lona'}
+
+💰 *Precios:*
+• Precio unitario: $${quote.unitPrice.toFixed(2)} MXN/m²
+• Subtotal: $${quote.subtotal.toFixed(2)} MXN
+• IVA (16%): $${quote.iva.toFixed(2)} MXN
+• *Total con IVA: $${quote.total.toFixed(2)} MXN*
+
+${quote.hasBulkDiscount ? '🎉 ¡Descuento por volumen aplicado!' : ''}
+
+📱 Generado por Printología`;
+
+    // Detect if it's mobile
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    let whatsappUrl;
+    if (isMobile) {
+      // Use WhatsApp app URL for mobile
+      whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
     } else {
-      actualTheme = theme;
-      root.classList.add(theme);
+      // Use WhatsApp Web for desktop
+      whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     }
 
-    // Set logo based on actual theme
-    setCurrentLogo(actualTheme === 'dark' ? '/LOGO_DARK.svg' : '/LOGO_LIGHT.svg');
-  }, [theme]);
+    window.open(whatsappUrl, '_blank');
+  };
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light');
+    root.classList.add('dark');
+  }, []);
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-background to-muted/20 dark:from-background dark:to-muted/10">
@@ -65,82 +88,44 @@ export default function Home() {
           <Image
             src={currentLogo}
             alt="Printología Logo"
-            width={240}
-            height={60}
-            
+            width={150}
+            height={40}
+
             className="transition-all duration-300"
           />
           
         </div>
 
-        {/* Desktop: Theme Toggle & Contact Button */}
+        {/* Desktop: WhatsApp Share Button */}
         <div className="hidden md:flex items-center gap-2">
           <Button
             variant="default"
             size="sm"
-            onClick={() => setIsContactModalOpen(true)}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            onClick={shareOnWhatsApp}
+            className="bg-green-600 hover:bg-green-700 text-white"
+            disabled={!quote}
           >
-            Enviar Cotización
-          </Button>
-          <Button
-            variant={theme === 'light' ? 'default' : 'ghost'}
-            size="sm"
-            onClick={() => setTheme('light')}
-          >
-            <Sun className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={theme === 'dark' ? 'default' : 'ghost'}
-            size="sm"
-            onClick={() => setTheme('dark')}
-          >
-            <Moon className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={theme === 'system' ? 'default' : 'ghost'}
-            size="sm"
-            onClick={() => setTheme('system')}
-          >
-            <Monitor className="h-4 w-4" />
+            <MessageCircle className="h-4 w-4 mr-2" />
+            Compartir por WhatsApp
           </Button>
         </div>
 
-        {/* Mobile: Hamburger Menu & Contact Button */}
+        {/* Mobile: WhatsApp Share & Menu */}
         <div className="md:hidden flex items-center gap-2">
           <Button
             variant="default"
             size="sm"
-            onClick={() => setIsContactModalOpen(true)}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs"
+            onClick={shareOnWhatsApp}
+            className="bg-green-600 hover:bg-green-700 text-white text-xs"
+            disabled={!quote}
           >
-            Cotización
+            <MessageCircle className="h-3 w-3 mr-1" />
+            WhatsApp
           </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm">
-                <Menu className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={() => setTheme('light')} className="flex items-center gap-2">
-                <Sun className="h-4 w-4" />
-                Tema Claro
-                {theme === 'light' && <span className="ml-auto">✓</span>}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme('dark')} className="flex items-center gap-2">
-                <Moon className="h-4 w-4" />
-                Tema Oscuro
-                {theme === 'dark' && <span className="ml-auto">✓</span>}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme('system')} className="flex items-center gap-2">
-                <Monitor className="h-4 w-4" />
-                Sistema
-                {theme === 'system' && <span className="ml-auto">✓</span>}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button variant="ghost" size="sm">
+            <Menu className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
@@ -196,13 +181,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Contact Modal */}
-      <ContactModal
-        isOpen={isContactModalOpen}
-        onClose={() => setIsContactModalOpen(false)}
-        quote={quote}
-        pdfFile={pdfFile}
-      />
     </div>
   );
 }

@@ -32,8 +32,8 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
     const num = parseFloat(value);
     if (isNaN(num)) return;
 
-    // Clamp width between 1 and 160 cm
-    const clampedWidth = Math.max(1, Math.min(160, num));
+    // Clamp width between 1 and 100 cm
+    const clampedWidth = Math.max(1, Math.min(150, num));
     setWidth(clampedWidth);
     onChange(clampedWidth, typeof height === 'number' ? height : 0, material);
   };
@@ -48,8 +48,8 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
     const num = parseFloat(value);
     if (isNaN(num)) return;
 
-    // Clamp height between 10 and 3600 cm
-    const clampedHeight = Math.max(10, Math.min(3600, num));
+    // Clamp height between 1 and 3600 cm (no minimum restriction)
+    const clampedHeight = Math.max(1, Math.min(3600, num));
     setHeight(clampedHeight);
     onChange(typeof width === 'number' ? width : 0, clampedHeight, material);
   };
@@ -78,15 +78,15 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
                value={width}
                onChange={(e) => handleWidthChange(e.target.value)}
                min="1"
-               max="160"
+               max="100"
                placeholder="Ej: 100"
                className={`border-2 focus:border-primary ${
-                 (typeof width === 'number' && (width <= 1 || width >= 160))
+                 (typeof width === 'number' && (width <= 1 || width >= 100))
                    ? 'border-orange-400 bg-orange-50 dark:bg-orange-900/20'
                    : 'border-border/80'
                }`}
              />
-             <p className="text-xs text-muted-foreground">Rango: 1-160 cm</p>
+             <p className="text-xs text-muted-foreground">Rango: 1-100 cm</p>
            </div>
            <div className="space-y-2">
              <Label htmlFor="height">Alto (cm)</Label>
@@ -95,16 +95,16 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
                type="number"
                value={height}
                onChange={(e) => handleHeightChange(e.target.value)}
-               min="10"
+               min="1"
                max="3600"
                placeholder="Ej: 100"
                className={`border-2 focus:border-primary ${
-                 (typeof height === 'number' && (height <= 10 || height >= 3600))
+                 (typeof height === 'number' && (height <= 1 || height >= 3600))
                    ? 'border-orange-400 bg-orange-50 dark:bg-orange-900/20'
                    : 'border-border/80'
                }`}
              />
-             <p className="text-xs text-muted-foreground">Rango: 10-3600 cm</p>
+             <p className="text-xs text-muted-foreground">Rango: 1-3600 cm</p>
            </div>
          </div>
 

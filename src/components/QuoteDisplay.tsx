@@ -69,9 +69,15 @@ export function QuoteDisplay({ quote }: QuoteDisplayProps) {
 
         <Separator />
 
-        <div className="flex justify-between text-xl font-bold text-primary bg-primary/10 p-3 rounded-lg border-2 border-primary/30 shadow-sm">
-          <span>Total</span>
-          <span>${quote.total.toFixed(2)} MXN</span>
+        <div className="space-y-2">
+          <div className="flex justify-between text-lg font-semibold">
+            <span>Total sin IVA</span>
+            <span>${quote.subtotal.toFixed(2)} MXN</span>
+          </div>
+          <div className="flex justify-between text-xl font-bold text-primary bg-primary/10 p-3 rounded-lg border-2 border-primary/30 shadow-sm">
+            <span>Total con IVA</span>
+            <span>${quote.total.toFixed(2)} MXN</span>
+          </div>
         </div>
 
         {quote.hasBulkDiscount && (
