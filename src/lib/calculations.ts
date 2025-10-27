@@ -12,11 +12,11 @@ export const calculateQuote = (width: number, height: number, material: Material
   let subtotal: number;
   let hasBulkDiscount: boolean;
 
-  // All materials now calculate by linear meters (height in meters)
+  // All materials calculate by linear meters (height in meters)
   area = height / 100; // height in cm to meters (linear meters)
-  unitPrice = PRICES[material].normal; // No bulk discount logic for now
+  unitPrice = PRICES[material].normal;
   subtotal = area * unitPrice;
-  hasBulkDiscount = false; // Remove bulk discount for simplicity
+  hasBulkDiscount = false;
 
   const iva = subtotal * 0.16;
   const total = subtotal + iva;
