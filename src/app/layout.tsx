@@ -20,12 +20,12 @@ export const metadata: Metadata = {
   keywords: "impresión gran formato, vinil, lona, cotización, Mayand, México",
   authors: [{ name: "Mayand" }],
   manifest: '/manifest.json',
-  themeColor: '#110363',
 };
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
+  themeColor: '#110363',
 };
 
 export default function RootLayout({

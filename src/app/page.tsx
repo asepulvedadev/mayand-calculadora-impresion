@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { DimensionCalculator } from '@/components/DimensionCalculator';
 import { QuoteDisplay } from '@/components/QuoteDisplay';
@@ -16,12 +16,12 @@ export default function Home() {
   const [quote, setQuote] = useState<QuoteData | null>(null);
   const [currentLogo] = useState('/LOGO_DARK.svg');
 
-  const handleDimensionChange = (newWidth: number, newHeight: number, newMaterial: Material) => {
+  const handleDimensionChange = useCallback((newWidth: number, newHeight: number, newMaterial: Material) => {
     setWidth(newWidth);
     setHeight(newHeight);
     const newQuote = calculateQuote(newWidth, newHeight, newMaterial);
     setQuote(newQuote);
-  };
+  }, []);
 
   const shareOnWhatsApp = () => {
     if (!quote) return;

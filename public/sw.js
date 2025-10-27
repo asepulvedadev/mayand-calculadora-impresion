@@ -1,16 +1,25 @@
-const CACHE_NAME = 'printologia-v1';
+const CACHE_NAME = 'mayand-v1';
 const urlsToCache = [
   '/',
   '/manifest.json',
   '/LOGO_DARK.svg',
-  '/globals.css',
-  // Add other critical assets
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
+      .then((cache) => {
+        // Cache files individually with error handling
+        return Promise.allSettled(
+          urlsToCache.map(url =>
+            cache.add(url).catch(err => {
+              console.warn(`Failed to cache ${url}:`, err);
+              return null;
+            })
+          )
+        );
+      })
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -35,6 +44,6 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });

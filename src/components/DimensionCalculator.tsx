@@ -12,8 +12,8 @@ interface DimensionCalculatorProps {
 }
 
 export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
-  const [width, setWidth] = useState<number | ''>('');
-  const [height, setHeight] = useState<number | ''>('');
+  const [width, setWidth] = useState<number | ''>(100);
+  const [height, setHeight] = useState<number | ''>(100);
   const [material, setMaterial] = useState<Material>('vinil');
 
   // Get max width based on material
@@ -21,10 +21,11 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
     return material === 'lona' ? 180 : 150;
   };
 
-  // Ensure initial values are sent to parent on mount
+  // Send initial values to parent on mount only
   useEffect(() => {
-    onChange(Number(width), Number(height), material);
-  }, [onChange]); // eslint-disable-line react-hooks/exhaustive-deps
+    onChange(100, 100, 'vinil');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleWidthChange = (value: string) => {
     if (value === '') {
