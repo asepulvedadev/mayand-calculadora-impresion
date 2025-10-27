@@ -35,22 +35,17 @@ export default function Home() {
 📏 *Dimensiones:*
 • Ancho: ${width} cm
 • Alto: ${height} cm
-${quote.material === 'vinil' || quote.material === 'vinil_transparente'
-  ? `• Metros lineales: ${quote.area.toFixed(2)} m`
-  : `• Área: ${quote.area.toFixed(2)} m²`
-}
+• Metros lineales: ${quote.area.toFixed(2)} m
 
 🏷️ *Material:* ${quote.material === 'vinil' ? 'Vinil' :
                 quote.material === 'vinil_transparente' ? 'Vinil Transparente' :
                 'Lona'}
 
 💰 *Precios:*
-• Precio unitario: $${quote.unitPrice.toFixed(2)} MXN/${quote.material === 'vinil' || quote.material === 'vinil_transparente' ? 'm' : 'm²'}
+• Precio unitario: $${quote.unitPrice.toFixed(2)} MXN/m
 • Subtotal: $${quote.subtotal.toFixed(2)} MXN
 • IVA (16%): $${quote.iva.toFixed(2)} MXN
 • *Total con IVA: $${quote.total.toFixed(2)} MXN*
-
-${quote.hasBulkDiscount ? `🎉 ¡Descuento por volumen aplicado! (${quote.material === 'vinil' || quote.material === 'vinil_transparente' ? '≥10m' : '≥10m²'})` : ''}
 
 📱 Generado por Mayand`;
 

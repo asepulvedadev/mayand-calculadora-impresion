@@ -160,10 +160,7 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
 
         <div className="text-xs text-muted-foreground bg-muted/50 p-1 rounded-md border-2 border-border/80 shadow-sm">
             <Ruler className="inline h-3 w-3 mr-1" />
-            {material === 'vinil' || material === 'vinil_transparente'
-              ? `Metros lineales: ${(typeof height === 'number' ? height : 0) / 100} m`
-              : `Área: ${((typeof width === 'number' ? width : 0) * (typeof height === 'number' ? height : 0) / 10000).toFixed(2)} m²`
-            }
+            Metros lineales: {(typeof height === 'number' ? height : 0) / 100} m
           </div>
       </CardContent>
     </Card>
