@@ -7,16 +7,11 @@ const PRICES = {
 };
 
 export const calculateQuote = (width: number, height: number, material: Material): QuoteData => {
-  let area: number;
-  let unitPrice: number;
-  let subtotal: number;
-  let hasBulkDiscount: boolean;
-
   // All materials calculate by linear meters (height in meters)
-  area = height / 100; // height in cm to meters (linear meters)
-  unitPrice = PRICES[material].normal;
-  subtotal = area * unitPrice;
-  hasBulkDiscount = false;
+  const area = height / 100; // height in cm to meters (linear meters)
+  const unitPrice = PRICES[material].normal;
+  const subtotal = area * unitPrice;
+  const hasBulkDiscount = false;
 
   const iva = subtotal * 0.16;
   const total = subtotal + iva;

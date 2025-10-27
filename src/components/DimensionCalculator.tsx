@@ -22,10 +22,9 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
   };
 
   // Ensure initial values are sent to parent on mount
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     onChange(Number(width), Number(height), material);
-  }, []);
+  }, [onChange]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleWidthChange = (value: string) => {
     if (value === '') {

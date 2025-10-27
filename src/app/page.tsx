@@ -10,19 +10,15 @@ import { MessageCircle, Facebook, Instagram } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Home() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [width, setWidth] = useState(100);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [height, setHeight] = useState(100);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [material, setMaterial] = useState<Material>('vinil');
+  const [material] = useState<Material>('vinil'); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [quote, setQuote] = useState<QuoteData | null>(null);
   const [currentLogo] = useState('/LOGO_DARK.svg');
 
   const handleDimensionChange = (newWidth: number, newHeight: number, newMaterial: Material) => {
     setWidth(newWidth);
     setHeight(newHeight);
-    setMaterial(newMaterial);
     const newQuote = calculateQuote(newWidth, newHeight, newMaterial);
     setQuote(newQuote);
   };
