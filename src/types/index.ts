@@ -10,4 +10,5 @@ export interface QuoteData {
   iva: number;
   total: number;
   hasBulkDiscount: boolean;
+  isPromotion: boolean;
 }

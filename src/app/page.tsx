@@ -1,13 +1,30 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
-import { DimensionCalculator } from '@/components/DimensionCalculator';
 import { QuoteDisplay } from '@/components/QuoteDisplay';
 import { calculateQuote } from '@/lib/calculations';
 import { Material, QuoteData } from '@/types';
 import { MessageCircle, Facebook, Instagram } from 'lucide-react';
 import Image from 'next/image';
+
+const DimensionCalculator = dynamic(
+  () => import('@/components/DimensionCalculator').then(mod => ({ default: mod.DimensionCalculator })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full glassmorphism fade-in hover-lift p-6 animate-pulse">
+        <div className="h-8 bg-muted rounded mb-4"></div>
+        <div className="space-y-4">
+          <div className="h-16 bg-muted rounded"></div>
+          <div className="h-16 bg-muted rounded"></div>
+          <div className="h-12 bg-muted rounded"></div>
+        </div>
+      </div>
+    )
+  }
+);
 
 export default function Home() {
   const [width, setWidth] = useState(100);
@@ -16,17 +33,17 @@ export default function Home() {
   const [quote, setQuote] = useState<QuoteData | null>(null);
   const [currentLogo] = useState('/LOGO_DARK.svg');
 
-  const handleDimensionChange = useCallback((newWidth: number, newHeight: number, newMaterial: Material) => {
+  const handleDimensionChange = useCallback((newWidth: number, newHeight: number, newMaterial: Material, isPromotion: boolean) => {
     setWidth(newWidth);
     setHeight(newHeight);
-    const newQuote = calculateQuote(newWidth, newHeight, newMaterial);
+    const newQuote = calculateQuote(newWidth, newHeight, newMaterial, isPromotion);
     setQuote(newQuote);
   }, []);
 
   const shareOnWhatsApp = () => {
     if (!quote) return;
 
-    const message = `🖨️ *Cotización Mayand*
+    const message = `🖨️ *Cotización Mayand*${quote.isPromotion ? ' ✨' : ''}
 
 📏 *Dimensiones:*
 • Ancho: ${width} cm
@@ -35,7 +52,7 @@ export default function Home() {
 
 🏷️ *Material:* ${quote.material === 'vinil' ? 'Vinil' :
                 quote.material === 'vinil_transparente' ? 'Vinil Transparente' :
-                'Lona'}
+                'Lona'}${quote.isPromotion ? ' _(Precio Promocional)_' : ''}
 
 💰 *Precios:*
 • Precio unitario: $${quote.unitPrice.toFixed(2)} MXN/m

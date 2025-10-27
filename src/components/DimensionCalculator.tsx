@@ -4,17 +4,19 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
 import { Material } from '@/types';
-import { Calculator, Ruler } from 'lucide-react';
+import { Calculator, Ruler, Sparkles } from 'lucide-react';
 
 interface DimensionCalculatorProps {
-  onChange: (width: number, height: number, material: Material) => void;
+  onChange: (width: number, height: number, material: Material, isPromotion: boolean) => void;
 }
 
 export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
   const [width, setWidth] = useState<number | ''>(100);
   const [height, setHeight] = useState<number | ''>(100);
   const [material, setMaterial] = useState<Material>('vinil');
+  const [isPromotion, setIsPromotion] = useState(false);
 
   // Get max width based on material
   const getMaxWidth = (material: Material): number => {
@@ -23,14 +25,14 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
 
   // Send initial values to parent on mount only
   useEffect(() => {
-    onChange(100, 100, 'vinil');
+    onChange(100, 100, 'vinil', false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleWidthChange = (value: string) => {
     if (value === '') {
       setWidth('');
-      onChange(0, typeof height === 'number' ? height : 0, material);
+      onChange(0, typeof height === 'number' ? height : 0, material, isPromotion);
       return;
     }
 
@@ -41,13 +43,13 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
     const maxWidth = getMaxWidth(material);
     const clampedWidth = Math.max(1, Math.min(maxWidth, num));
     setWidth(clampedWidth);
-    onChange(clampedWidth, typeof height === 'number' ? height : 0, material);
+    onChange(clampedWidth, typeof height === 'number' ? height : 0, material, isPromotion);
   };
 
   const handleHeightChange = (value: string) => {
     if (value === '') {
       setHeight('');
-      onChange(typeof width === 'number' ? width : 0, 0, material);
+      onChange(typeof width === 'number' ? width : 0, 0, material, isPromotion);
       return;
     }
 
@@ -57,7 +59,7 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
     // Clamp height between 1 and 3600 cm (no minimum restriction)
     const clampedHeight = Math.max(1, Math.min(3600, num));
     setHeight(clampedHeight);
-    onChange(typeof width === 'number' ? width : 0, clampedHeight, material);
+    onChange(typeof width === 'number' ? width : 0, clampedHeight, material, isPromotion);
   };
 
   const handleMaterialChange = (selectedMaterial: 'vinil' | 'lona' | 'vinil_transparente') => {
@@ -71,7 +73,12 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
       setWidth(validatedWidth);
     }
 
-    onChange(validatedWidth, typeof height === 'number' ? height : 0, selectedMaterial);
+    onChange(validatedWidth, typeof height === 'number' ? height : 0, selectedMaterial, isPromotion);
+  };
+
+  const handlePromotionChange = (checked: boolean) => {
+    setIsPromotion(checked);
+    onChange(typeof width === 'number' ? width : 0, typeof height === 'number' ? height : 0, material, checked);
   };
 
   return (
@@ -156,6 +163,28 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
               Vinil Transp.
             </button>
           </div>
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center justify-between bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-3 rounded-md border-2 border-yellow-400/50 dark:border-yellow-600/50 shadow-sm">
+            <div className="flex items-center gap-2">
+              <Sparkles className={`h-4 w-4 ${isPromotion ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-400'}`} />
+              <Label htmlFor="promotion" className="text-sm font-semibold cursor-pointer">
+                Precio Promocional
+              </Label>
+            </div>
+            <Switch
+              id="promotion"
+              checked={isPromotion}
+              onCheckedChange={handlePromotionChange}
+              className="data-[state=checked]:bg-yellow-600"
+            />
+          </div>
+          {isPromotion && (
+            <p className="text-xs text-yellow-700 dark:text-yellow-400 px-2 animate-in fade-in">
+              ✨ Precios especiales: Vinil $120, Transp. $160, Lona $70/m
+            </p>
+          )}
         </div>
 
         <div className="text-xs text-muted-foreground bg-muted/50 p-1 rounded-md border-2 border-border/80 shadow-sm">

@@ -3,7 +3,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { QuoteData } from '@/types';
-import { DollarSign, Calculator } from 'lucide-react';
+import { DollarSign, Calculator, Sparkles } from 'lucide-react';
 
 interface QuoteDisplayProps {
   quote: QuoteData | null;
@@ -25,10 +25,18 @@ export function QuoteDisplay({ quote }: QuoteDisplayProps) {
   return (
     <div className="w-full h-full flex flex-col p-4">
       <div className="mb-4">
-        <h2 className="text-lg font-bold flex items-center gap-2">
-          <DollarSign className="h-4 w-4 text-primary" />
-          Cotización
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            <DollarSign className="h-4 w-4 text-primary" />
+            Cotización
+          </h2>
+          {quote.isPromotion && (
+            <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 shadow-md animate-pulse">
+              <Sparkles className="h-3 w-3 mr-1" />
+              Promoción
+            </Badge>
+          )}
+        </div>
       </div>
       <div className="flex-1 flex flex-col justify-between space-y-3">
         <div className="grid grid-cols-2 gap-3">
