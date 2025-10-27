@@ -6,7 +6,7 @@ import { DimensionCalculator } from '@/components/DimensionCalculator';
 import { QuoteDisplay } from '@/components/QuoteDisplay';
 import { calculateQuote } from '@/lib/calculations';
 import { Material, QuoteData } from '@/types';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Facebook, Instagram } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Home() {
@@ -76,52 +76,50 @@ ${quote.hasBulkDiscount ? `🎉 ¡Descuento por volumen aplicado! (${quote.mater
   }, []);
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-background to-muted/20 dark:from-background dark:to-muted/10">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background to-muted/20 dark:from-background dark:to-muted/10">
       {/* Header */}
-      <div className="h-16 border-b-2 border-border/80 bg-background/98 backdrop-blur supports-[backdrop-filter]:bg-background/95 flex items-center justify-between px-6 shadow-sm">
-        <div className="flex items-center gap-3">
+      <header className=" mx-auto h-16 border-b border-border/60 bg-gradient-to-r from-background/95 to-muted/10 backdrop-blur supports-[backdrop-filter]:bg-background/90 flex items-center justify-around px-6 shadow-md rounded-b-lg">
+        <div className="flex items-center gap-8">
           <Image
             src={currentLogo}
             alt="Mayand Logo"
             width={150}
             height={40}
-
             className="transition-all duration-300"
           />
-          
         </div>
 
         {/* Desktop: WhatsApp Share Button */}
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-8">
           <Button
             variant="default"
             size="sm"
             onClick={shareOnWhatsApp}
-            className="bg-green-600 hover:bg-green-700 text-white"
+            className="bg-green-600 hover:bg-green-700 text-white rounded-full px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300"
             disabled={!quote}
           >
             <MessageCircle className="h-4 w-4 mr-2" />
-            Compartir por WhatsApp
+            Compartir
           </Button>
         </div>
 
         {/* Mobile: WhatsApp Share Only */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center gap-3">
           <Button
             variant="default"
             size="sm"
             onClick={shareOnWhatsApp}
-            className="bg-green-600 hover:bg-green-700 text-white text-xs"
+            className="bg-green-600 hover:bg-green-700 text-white rounded-full px-3 py-1 shadow-lg hover:shadow-xl transition-all duration-300 text-xs"
             disabled={!quote}
           >
             <MessageCircle className="h-3 w-3 mr-1" />
-            WhatsApp
+            Compartir
           </Button>
         </div>
-      </div>
+      </header>
 
       {/* Main Content - Fixed Layout */}
-      <div className="h-[calc(100vh-4rem)] overflow-hidden">
+      <main className="flex-1 max-w-[80%] mx-auto overflow-hidden">
         {/* Desktop Layout - Equal Size Grid */}
         <div className="hidden lg:grid lg:grid-cols-2 lg:h-full lg:gap-0">
           {/* Left Panel - Calculator */}
@@ -142,7 +140,34 @@ ${quote.hasBulkDiscount ? `🎉 ¡Descuento por volumen aplicado! (${quote.mater
             <QuoteDisplay quote={quote} />
           </div>
         </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="max-w-[80%] mx-auto bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/85 border-t border-border/60 py-4 px-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="text-sm text-muted-foreground">
+            Hecho por <span className="font-semibold text-primary">Craftia</span> - Derechos reservados Mayand
+          </div>
+          <div className="flex items-center gap-4">
+            <a
+              href="https://facebook.com/mayand"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Facebook className="h-5 w-5" />
+            </a>
+            <a
+              href="https://instagram.com/mayand"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Instagram className="h-5 w-5" />
+            </a>
+          </div>
+        </div>
+      </footer>
 
     </div>
   );
