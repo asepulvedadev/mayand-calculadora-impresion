@@ -41,8 +41,8 @@ export function QuoteDisplay({ quote }: QuoteDisplayProps) {
       <div className="flex-1 flex flex-col justify-between space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-muted/50 p-2 rounded-lg border border-border/60">
-            <p className="text-xs text-muted-foreground">Metros lineales</p>
-            <p className="text-lg font-bold">{quote.area.toFixed(2)} m</p>
+            <p className="text-xs text-muted-foreground">{quote.material === 'lona' ? 'Metros cuadrados' : 'Metros lineales'}</p>
+            <p className="text-lg font-bold">{quote.area.toFixed(2)} {quote.material === 'lona' ? 'm²' : 'm'}</p>
           </div>
           <div className="bg-muted/50 p-2 rounded-lg border border-border/60">
             <p className="text-xs text-muted-foreground">Material</p>
@@ -59,7 +59,7 @@ export function QuoteDisplay({ quote }: QuoteDisplayProps) {
         <div className="space-y-1">
           <div className="flex justify-between text-sm">
             <span>Precio unitario</span>
-            <span>${quote.unitPrice.toFixed(2)} MXN/m</span>
+            <span>${quote.unitPrice.toFixed(2)} MXN/{quote.material === 'lona' ? 'm²' : 'm'}</span>
           </div>
           <div className="flex justify-between font-medium text-sm">
             <span>Subtotal</span>
