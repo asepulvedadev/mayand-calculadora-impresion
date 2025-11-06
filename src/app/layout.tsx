@@ -43,6 +43,7 @@ export default function RootLayout({
     <html lang="es">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{ backgroundColor: '#110363', color: 'white' }}
       >
         <PWA />
         <ErrorBoundary>

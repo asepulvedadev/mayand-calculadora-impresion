@@ -75,7 +75,7 @@ ${generatedQuote.assembly_cost > 0 ? `• Ensamblaje: $${generatedQuote.assembly
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background to-muted/20 dark:from-background dark:to-muted/10">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#110363' }}>
       {/* Header */}
       <header className="mx-auto h-16 border-b border-border/60 bg-gradient-to-r from-background/95 to-muted/10 backdrop-blur supports-[backdrop-filter]:bg-background/90 flex items-center justify-between px-6 shadow-md rounded-b-lg">
         <div className="flex items-center gap-8">

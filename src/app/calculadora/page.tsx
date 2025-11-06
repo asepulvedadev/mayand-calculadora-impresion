@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { QuoteDisplay } from '@/components/QuoteDisplay';
-import { Material, QuoteData } from '@/types';
 import { MessageCircle, Facebook, Instagram } from 'lucide-react';
 import Image from 'next/image';
+import { usePrintCalculatorStore } from '@/lib/stores/printCalculatorStore';
 
 const DimensionCalculator = dynamic(
   () => import('@/components/DimensionCalculator').then(mod => ({ default: mod.DimensionCalculator })),
@@ -26,41 +26,8 @@ const DimensionCalculator = dynamic(
 );
 
 export default function CalculatorPage() {
-  const [width, setWidth] = useState(100);
-  const [height, setHeight] = useState(100);
-  const [material] = useState<Material>('vinil'); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [quote, setQuote] = useState<QuoteData | null>(null);
   const [currentLogo] = useState('/LOGO_DARK.svg');
-
-  const handleDimensionChange = useCallback(async (newWidth: number, newHeight: number, newMaterial: Material, isPromotion: boolean) => {
-    setWidth(newWidth);
-    setHeight(newHeight);
-
-    try {
-      const response = await fetch('/api/calculations/impresion', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          width: newWidth,
-          height: newHeight,
-          material: newMaterial,
-          isPromotion,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al calcular la cotización');
-      }
-
-      const newQuote: QuoteData = await response.json();
-      setQuote(newQuote);
-    } catch (error) {
-      console.error('Error calculating quote:', error);
-      // Mantener la cotización anterior o mostrar error
-    }
-  }, []);
+  const { quote, formData } = usePrintCalculatorStore();
 
   const shareOnWhatsApp = () => {
     if (!quote) return;
@@ -68,8 +35,8 @@ export default function CalculatorPage() {
     const message = `🖨️ *Cotización Mayand*${quote.isPromotion ? ' ✨' : ''}
 
 📏 *Dimensiones:*
-• Ancho: ${width} cm
-• Alto: ${height} cm
+• Ancho: ${formData.width} cm
+• Alto: ${formData.height} cm
 • Metros lineales: ${quote.area.toFixed(2)} m
 
 🏷️ *Material:* ${quote.material === 'vinil' ? 'Vinil' :
@@ -106,7 +73,7 @@ export default function CalculatorPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background to-muted/20 dark:from-background dark:to-muted/10">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#110363' }}>
       {/* Header */}
       <header className=" mx-auto h-16 border-b border-border/60 bg-gradient-to-r from-background/95 to-muted/10 backdrop-blur supports-[backdrop-filter]:bg-background/90 flex items-center justify-around px-6 shadow-md rounded-b-lg">
         <div className="flex items-center gap-8">
@@ -154,7 +121,7 @@ export default function CalculatorPage() {
         <div className="hidden lg:grid lg:grid-cols-2 lg:h-full lg:gap-0">
           {/* Left Panel - Calculator */}
           <div className="border-r-2 border-border/60 bg-background/80 backdrop-blur-sm p-6 overflow-y-auto shadow-lg">
-            <DimensionCalculator onChange={handleDimensionChange} />
+            <DimensionCalculator />
           </div>
 
           {/* Right Panel - Quote */}
@@ -166,7 +133,7 @@ export default function CalculatorPage() {
         {/* Mobile/Tablet Layout - Simplified */}
         <div className="lg:hidden h-full overflow-y-auto">
           <div className="space-y-6 p-4">
-            <DimensionCalculator onChange={handleDimensionChange} />
+            <DimensionCalculator />
             <QuoteDisplay quote={quote} />
           </div>
         </div>
