@@ -60,23 +60,7 @@ export default function DashboardPage() {
         <p className="text-white/80 text-lg">Sistema de cotización y gestión de proyectos</p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white/70 text-sm font-medium">{stat.title}</p>
-                <p className="text-2xl font-bold text-white mt-1">{stat.value}</p>
-                <p className="text-green-400 text-sm mt-1">{stat.change} vs mes anterior</p>
-              </div>
-              <stat.icon className={`h-8 w-8 ${stat.color}`} />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Quick Actions */}
+      {/* Quick Actions - First */}
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-white">Acciones Rápidas</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -105,6 +89,25 @@ export default function DashboardPage() {
                 </div>
               </div>
             </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats Grid - After Quick Actions */}
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">Estadísticas</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white/70 text-sm font-medium">{stat.title}</p>
+                  <p className="text-2xl font-bold text-white mt-1">{stat.value}</p>
+                  <p className="text-green-400 text-sm mt-1">{stat.change} vs mes anterior</p>
+                </div>
+                <stat.icon className={`h-8 w-8 ${stat.color}`} />
+              </div>
+            </div>
           ))}
         </div>
       </div>
