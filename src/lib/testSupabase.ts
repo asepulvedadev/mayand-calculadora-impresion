@@ -5,7 +5,7 @@ export async function testSupabaseConnection() {
     console.log('Testing Supabase connection...');
 
     // Test 1: Basic connection
-    const { data: connectionTest, error: connectionError } = await supabase
+    const { error: connectionError } = await supabase
       .from('laser_materials')
       .select('count')
       .limit(1);
@@ -113,10 +113,10 @@ export async function testSupabaseConnection() {
 
 // Función para ejecutar desde la consola del navegador
 if (typeof window !== 'undefined') {
-  (window as any).testSupabase = testSupabaseConnection;
+  (window as { testSupabase?: typeof testSupabaseConnection }).testSupabase = testSupabaseConnection;
 
   // Función adicional para probar inserción manual
-  (window as any).testInsert = async () => {
+  (window as { testInsert?: () => Promise<void> }).testInsert = async () => {
     console.log('Testing manual insert...');
     try {
       const { data: matList } = await supabase
@@ -160,7 +160,7 @@ if (typeof window !== 'undefined') {
         console.error('Error type:', typeof error);
         console.error('Error keys:', Object.keys(error));
         for (const key of Object.keys(error)) {
-          console.error(`${key}:`, (error as any)[key]);
+          console.error(`${key}:`, (error as unknown as { [key: string]: unknown })[key]);
         }
       } else {
         console.log('Insert success:', data);

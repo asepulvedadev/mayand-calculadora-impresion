@@ -6,7 +6,7 @@ export async function GET() {
     console.log('🧪 Ejecutando test de Supabase desde API...');
 
     // Test 1: Conexión básica
-    const { data: connectionTest, error: connectionError } = await supabase
+    const { error: connectionError } = await supabase
       .from('laser_materials')
       .select('count')
       .limit(1);
@@ -73,9 +73,9 @@ export async function GET() {
       console.error('Keys del error:', Object.keys(insertError));
 
       // Mostrar todas las propiedades del error
-      const errorDetails: any = {};
+      const errorDetails: Record<string, unknown> = {};
       for (const key of Object.keys(insertError)) {
-        errorDetails[key] = (insertError as any)[key];
+        errorDetails[key] = (insertError as unknown as Record<string, unknown>)[key];
       }
 
       return NextResponse.json({

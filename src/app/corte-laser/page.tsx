@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { LaserCalculator } from '@/components/LaserCalculator';
 import { LaserQuote } from '@/types/laser';
@@ -77,15 +79,15 @@ ${generatedQuote.assembly_cost > 0 ? `• Ensamblaje: $${generatedQuote.assembly
       {/* Header */}
       <header className="mx-auto h-16 border-b border-border/60 bg-gradient-to-r from-background/95 to-muted/10 backdrop-blur supports-[backdrop-filter]:bg-background/90 flex items-center justify-between px-6 shadow-md rounded-b-lg">
         <div className="flex items-center gap-8">
-          <a href="/" className="flex items-center gap-8">
-            <img
+          <Link href="/" className="flex items-center gap-8">
+            <Image
               src={currentLogo}
               alt="Mayand Logo"
               width={150}
               height={40}
               className="transition-all duration-300"
             />
-          </a>
+          </Link>
         </div>
 
         {/* Desktop: Share and PDF Buttons */}

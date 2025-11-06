@@ -8,12 +8,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Calculator, AlertCircle } from 'lucide-react';
-import { LaserMaterial, LaserQuoteInput } from '@/types/laser';
+import { LaserMaterial, LaserQuoteInput, LaserQuote } from '@/types/laser';
 import { getActiveMaterials } from '@/lib/laserApi';
 import { validateLaserQuoteInput } from '@/lib/laserCalculations';
 
 interface LaserCalculatorProps {
-  onQuoteGenerated?: (quote: any) => void;
+  onQuoteGenerated?: (quote: LaserQuote) => void;
 }
 
 export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
@@ -30,7 +30,7 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
     assembly_cost_per_piece: '',
   });
   const [errors, setErrors] = useState<string[]>([]);
-  const [quote, setQuote] = useState<any>(null);
+  const [quote, setQuote] = useState<LaserQuote | null>(null);
 
   useEffect(() => {
     loadMaterials();

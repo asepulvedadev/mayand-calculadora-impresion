@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { LaserMaterial, LaserQuote, LaserQuoteInput } from '@/types/laser';
+import { LaserMaterial, LaserQuote } from '@/types/laser';
 
 // Verificar configuración de Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
