@@ -44,11 +44,10 @@ export function Sidebar() {
             {!isCollapsed && (
               <Link href="/" className="flex items-center space-x-2">
                 <Image
-                  src="/favicon.ico"
+                  src="/LOGO_DARK.svg"
                   alt="Mayand Logo"
-                  width={32}
+                  width={120}
                   height={32}
-                  className="rounded"
                 />
               </Link>
             )}
