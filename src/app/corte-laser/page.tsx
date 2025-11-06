@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { LaserCalculator } from '@/components/LaserCalculator';
 import { createQuote } from '@/lib/laserApi';
 import { useLaserCalculatorStore } from '@/lib/stores/laserCalculatorStore';
+import { LaserQuote } from '@/types/laser';
 import { MessageCircle, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -48,7 +49,7 @@ ${quote.assembly_cost > 0 ? `• Ensamblaje: $${quote.assembly_cost.toFixed(2)} 
     toast.info('Función de PDF próximamente disponible');
   };
 
-  const handleQuoteGenerated = async (quote: any) => {
+  const handleQuoteGenerated = async (quote: LaserQuote) => {
     try {
       console.log('Intentando guardar cotización:', quote);
       // Guardar la cotización en la base de datos

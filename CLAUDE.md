@@ -23,21 +23,29 @@ npm run lint         # Run ESLint
 ### Pricing Model (src/lib/calculations.ts)
 
 All materials are priced by **linear meters** (height in meters):
+
+**Normal Prices:**
 - **Vinil**: 150 MXN/linear meter (max width: 150cm)
 - **Vinil Transparente**: 180 MXN/linear meter (max width: 150cm)
 - **Lona**: 75 MXN/linear meter (max width: 180cm)
+
+**Promotional Prices** (activated via toggle):
+- **Vinil**: 120 MXN/linear meter
+- **Vinil Transparente**: 160 MXN/linear meter
+- **Lona**: 70 MXN/linear meter
+
 - **IVA**: 16% tax applied to all quotes
 - **Height range**: 1-3600 cm (0.01m - 36m)
 
-**Important**: The pricing in calculations.ts is currently set to all materials at the same price for normal and bulk. The README mentions different bulk pricing (>10m) but this is NOT implemented in the code. If asked to implement bulk discounts, refer to README.md lines 47-49 for the business requirements.
+The `calculateQuote()` function accepts an `isPromotion` boolean parameter to switch between normal and promotional pricing.
 
 ### State Management Pattern
 
 The app uses **unidirectional data flow**:
-1. `DimensionCalculator` component captures user input (width, height, material)
-2. Calls `onChange` callback with validated dimensions
-3. `page.tsx` receives dimensions and calls `calculateQuote()`
-4. `QuoteDisplay` receives the computed `QuoteData` object and displays results
+1. `DimensionCalculator` component captures user input (width, height, material, isPromotion)
+2. Calls `onChange` callback with validated dimensions and promotion status
+3. `page.tsx` receives all parameters and calls `calculateQuote(width, height, material, isPromotion)`
+4. `QuoteDisplay` receives the computed `QuoteData` object and displays results with promotion badge if active
 
 This pattern is critical - do NOT add local state to `QuoteDisplay` or duplicate calculations.
 

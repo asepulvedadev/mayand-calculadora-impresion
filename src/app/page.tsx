@@ -53,7 +53,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 justify-center">
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl font-bold text-white mb-2">Dashboard Mayand</h1>

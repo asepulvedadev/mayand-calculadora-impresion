@@ -2,14 +2,16 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { QuoteData } from '@/types';
 import { DollarSign, Calculator, Sparkles } from 'lucide-react';
+import { usePrintCalculatorStore } from '@/lib/stores/printCalculatorStore';
 
 interface QuoteDisplayProps {
-  quote: QuoteData | null;
+  quote?: import('@/lib/validations/calculator').PrintQuoteResponse | null; // Para compatibilidad con el componente padre
 }
 
-export function QuoteDisplay({ quote }: QuoteDisplayProps) {
+export function QuoteDisplay({ quote: propQuote }: QuoteDisplayProps) {
+  const { quote: storeQuote } = usePrintCalculatorStore();
+  const quote = propQuote || storeQuote;
   if (!quote) {
     return (
       <div className="w-full h-full flex items-center justify-center p-6">

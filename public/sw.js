@@ -1,49 +1,30 @@
-const CACHE_NAME = 'mayand-v1';
-const urlsToCache = [
-  '/',
-  '/manifest.json',
-  '/LOGO_DARK.svg',
-];
+// Service Worker - DISABLED for development
+// This service worker will unregister itself
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        // Cache files individually with error handling
-        return Promise.allSettled(
-          urlsToCache.map(url =>
-            cache.add(url).catch(err => {
-              console.warn(`Failed to cache ${url}:`, err);
-              return null;
-            })
-          )
-        );
-      })
-      .then(() => self.skipWaiting())
-  );
-});
-
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      }
-    )
-  );
+  // Skip waiting and activate immediately
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
+    // Delete all caches
     caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
+        cacheNames.map((cacheName) => caches.delete(cacheName))
       );
-    }).then(() => self.clients.claim())
+    }).then(() => {
+      // Take control of all pages immediately
+      return self.clients.claim();
+    }).then(() => {
+      // Unregister this service worker
+      return self.registration.unregister();
+    }).then(() => {
+      console.log('Service Worker unregistered successfully');
+      // Reload all clients
+      return self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => client.navigate(client.url));
+      });
+    })
   );
 });
