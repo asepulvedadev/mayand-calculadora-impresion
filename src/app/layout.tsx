@@ -53,7 +53,6 @@ export default function RootLayout({
           </DashboardLayout>
         </ErrorBoundary>
         <Toaster />
-        <SupabaseTest />
       </body>
     </html>
   );
