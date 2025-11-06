@@ -70,21 +70,23 @@ export default function DashboardPage() {
               href={action.href}
               className="block group"
             >
-              <div className={`bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 ${action.color}`}>
-                <div className="flex items-start space-x-4">
-                  <action.icon className="h-8 w-8 mt-1" />
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-white group-hover:text-white/90 transition-colors">
-                      {action.title}
-                    </h3>
-                    <p className="text-white/70 mt-2">
-                      {action.description}
-                    </p>
-                    <div className="mt-4">
-                      <span className="text-sm text-white/60 group-hover:text-white/80 transition-colors">
-                        Ir a calculadora →
-                      </span>
+              <div className={`bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 ${action.color} h-full`}>
+                <div className="flex flex-col h-full">
+                  <div className="flex items-start space-x-4 flex-1">
+                    <action.icon className="h-8 w-8 mt-1 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-white group-hover:text-white/90 transition-colors">
+                        {action.title}
+                      </h3>
+                      <p className="text-white/70 mt-2">
+                        {action.description}
+                      </p>
                     </div>
+                  </div>
+                  <div className="mt-4">
+                    <span className="text-sm text-white/60 group-hover:text-white/80 transition-colors">
+                      Ir a calculadora →
+                    </span>
                   </div>
                 </div>
               </div>
@@ -98,14 +100,16 @@ export default function DashboardPage() {
         <h2 className="text-2xl font-bold text-white">Estadísticas</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-              <div className="flex items-center justify-between">
+            <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 h-full">
+              <div className="flex flex-col h-full justify-between">
                 <div>
                   <p className="text-white/70 text-sm font-medium">{stat.title}</p>
                   <p className="text-2xl font-bold text-white mt-1">{stat.value}</p>
-                  <p className="text-green-400 text-sm mt-1">{stat.change} vs mes anterior</p>
                 </div>
-                <stat.icon className={`h-8 w-8 ${stat.color}`} />
+                <div className="flex items-center justify-between mt-4">
+                  <p className="text-green-400 text-sm">{stat.change} vs mes anterior</p>
+                  <stat.icon className={`h-6 w-6 ${stat.color} flex-shrink-0`} />
+                </div>
               </div>
             </div>
           ))}

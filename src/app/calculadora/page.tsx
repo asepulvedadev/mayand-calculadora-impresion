@@ -84,7 +84,7 @@ export default function CalculatorPage() {
       </div>
 
       {/* Desktop Layout - Equal Size Grid */}
-      <div className="grid lg:grid-cols-2 gap-6 h-full">
+      <div className="grid lg:grid-cols-2 gap-6">
         {/* Left Panel - Calculator */}
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
           <DimensionCalculator />

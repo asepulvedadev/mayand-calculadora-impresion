@@ -14,8 +14,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Main content */}
       <div className="flex-1 lg:ml-64">
-        <main className="min-h-screen p-6 flex justify-center">
-          <div className="w-full max-w-7xl">
+        <main className="min-h-screen p-6">
+          <div className="max-w-7xl mx-auto">
             {children}
           </div>
         </main>
