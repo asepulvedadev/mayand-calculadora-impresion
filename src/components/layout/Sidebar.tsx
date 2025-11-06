@@ -45,7 +45,7 @@ export function Sidebar() {
                 alt="Mayand Logo"
                 width={120}
                 height={32}
-                className="brightness-0 invert"
+                className="filter brightness-0 invert-0"
               />
             </Link>
           </div>
