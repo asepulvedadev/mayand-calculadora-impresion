@@ -144,16 +144,19 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
         <CardContent className="space-y-6">
           {/* Material Selection */}
           <div className="space-y-2">
-            <Label htmlFor="material">Material</Label>
+            <Label htmlFor="material" className="text-white">Material</Label>
             <select
               id="material"
               value={formData.material_id}
               onChange={(e) => handleMaterialChange(e.target.value)}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-full rounded-md border-2 border-white/30 bg-white/10 backdrop-blur-sm px-3 py-2 text-sm text-white font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary disabled:cursor-not-allowed disabled:opacity-50 hover:bg-white/20 transition-all"
+              style={{
+                colorScheme: 'dark'
+              }}
             >
-              <option value="">Selecciona un material</option>
+              <option value="" className="bg-[#110363] text-white">Selecciona un material</option>
               {materials.map((material) => (
-                <option key={material.id} value={material.id}>
+                <option key={material.id} value={material.id} className="bg-[#110363] text-white py-2">
                   {material.name} - {material.thickness}mm
                   {material.color && ` (${material.color})`}
                 </option>
@@ -162,21 +165,21 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
           </div>
 
           {selectedMaterial && (
-            <div className="p-4 bg-muted/50 rounded-lg">
-              <h4 className="font-medium mb-2">Especificaciones del Material</h4>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+              <h4 className="font-medium mb-2 text-white">Especificaciones del Material</h4>
+              <div className="grid grid-cols-2 gap-4 text-sm text-white/90">
                 <div>
-                  <span className="font-medium">Lámina:</span> {selectedMaterial.sheet_width} × {selectedMaterial.sheet_height} cm
+                  <span className="font-medium text-white">Lámina:</span> {selectedMaterial.sheet_width} × {selectedMaterial.sheet_height} cm
                 </div>
                 <div>
-                  <span className="font-medium">Área útil:</span> {selectedMaterial.usable_width} × {selectedMaterial.usable_height} cm
+                  <span className="font-medium text-white">Área útil:</span> {selectedMaterial.usable_width} × {selectedMaterial.usable_height} cm
                 </div>
                 <div>
-                  <span className="font-medium">Precio:</span> ${selectedMaterial.price_per_sheet.toFixed(2)} MXN
+                  <span className="font-medium text-white">Precio:</span> ${selectedMaterial.price_per_sheet.toFixed(2)} MXN
                 </div>
                 {selectedMaterial.finish && (
                   <div>
-                    <span className="font-medium">Acabado:</span> {selectedMaterial.finish}
+                    <span className="font-medium text-white">Acabado:</span> {selectedMaterial.finish}
                   </div>
                 )}
               </div>
