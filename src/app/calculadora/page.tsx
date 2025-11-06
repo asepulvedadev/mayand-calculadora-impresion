@@ -26,8 +26,7 @@ const DimensionCalculator = dynamic(
 );
 
 export default function CalculatorPage() {
-  const [currentLogo] = useState('/LOGO_DARK.svg');
-  const { quote, formData } = usePrintCalculatorStore();
+  const { quote } = usePrintCalculatorStore();
 
   const shareOnWhatsApp = () => {
     if (!quote) return;
@@ -35,8 +34,8 @@ export default function CalculatorPage() {
     const message = `🖨️ *Cotización Mayand*${quote.isPromotion ? ' ✨' : ''}
 
 📏 *Dimensiones:*
-• Ancho: ${formData.width} cm
-• Alto: ${formData.height} cm
+• Ancho: ${quote.width} cm
+• Alto: ${quote.height} cm
 • Metros lineales: ${quote.area.toFixed(2)} m
 
 🏷️ *Material:* ${quote.material === 'vinil' ? 'Vinil' :
@@ -66,106 +65,36 @@ export default function CalculatorPage() {
     window.open(whatsappUrl, '_blank');
   };
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light');
-    root.classList.add('dark');
-  }, []);
-
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#110363' }}>
-      {/* Header */}
-      <header className=" mx-auto h-16 border-b border-border/60 bg-gradient-to-r from-background/95 to-muted/10 backdrop-blur supports-[backdrop-filter]:bg-background/90 flex items-center justify-around px-6 shadow-md rounded-b-lg">
-        <div className="flex items-center gap-8">
-          <Image
-            src={currentLogo}
-            alt="Mayand Logo"
-            width={150}
-            height={40}
-            className="transition-all duration-300"
-          />
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white">Calculadora de Impresión</h1>
+          <p className="text-white/80 mt-2">Cotiza tu impresión gran formato con Mayand</p>
         </div>
-
-        {/* Desktop: WhatsApp Share Button */}
-        <div className="hidden md:flex items-center gap-8">
+        {quote && (
           <Button
-            variant="default"
-            size="sm"
             onClick={shareOnWhatsApp}
             className="bg-green-600 hover:bg-green-700 text-white rounded-full px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300"
-            disabled={!quote}
           >
             <MessageCircle className="h-4 w-4 mr-2" />
-            Compartir
+            Compartir Cotización
           </Button>
+        )}
+      </div>
+
+      {/* Desktop Layout - Equal Size Grid */}
+      <div className="grid lg:grid-cols-2 gap-6 h-full">
+        {/* Left Panel - Calculator */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+          <DimensionCalculator />
         </div>
 
-        {/* Mobile: WhatsApp Share Only */}
-        <div className="md:hidden flex items-center gap-3">
-          <Button
-            variant="default"
-            size="sm"
-            onClick={shareOnWhatsApp}
-            className="bg-green-600 hover:bg-green-700 text-white rounded-full px-3 py-1 shadow-lg hover:shadow-xl transition-all duration-300 text-xs"
-            disabled={!quote}
-          >
-            <MessageCircle className="h-3 w-3 mr-1" />
-            Compartir
-          </Button>
+        {/* Right Panel - Quote */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+          <QuoteDisplay quote={quote} />
         </div>
-      </header>
-
-      {/* Main Content - Fixed Layout */}
-      <main className="flex-1 max-w-[80%] mx-auto overflow-hidden">
-        {/* Desktop Layout - Equal Size Grid */}
-        <div className="hidden lg:grid lg:grid-cols-2 lg:h-full lg:gap-0">
-          {/* Left Panel - Calculator */}
-          <div className="border-r-2 border-border/60 bg-background/80 backdrop-blur-sm p-6 overflow-y-auto shadow-lg">
-            <DimensionCalculator />
-          </div>
-
-          {/* Right Panel - Quote */}
-          <div className="bg-background/80 backdrop-blur-sm shadow-lg h-full p-6">
-            <QuoteDisplay quote={quote} />
-          </div>
-        </div>
-
-        {/* Mobile/Tablet Layout - Simplified */}
-        <div className="lg:hidden h-full overflow-y-auto">
-          <div className="space-y-6 p-4">
-            <DimensionCalculator />
-            <QuoteDisplay quote={quote} />
-          </div>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="max-w-[80%] mx-auto bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/85 border-t border-border/60 py-4 px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-muted-foreground">
-            Hecho por <span className="font-semibold text-primary">Craftia</span> - Derechos reservados Mayand
-          </div>
-          <div className="flex items-center gap-4">
-            <a
-              href="https://facebook.com/mayand"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Facebook className="h-5 w-5" />
-            </a>
-            <a
-              href="https://instagram.com/mayand"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Instagram className="h-5 w-5" />
-            </a>
-          </div>
-        </div>
-      </footer>
-
+      </div>
     </div>
   );
 }
