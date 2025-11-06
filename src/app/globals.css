@@ -45,10 +45,10 @@
 
 /* Custom styles for Mayand */
 .glassmorphism {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(17, 3, 99, 0.85);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(69, 143, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(17, 3, 99, 0.3);
 }
 
 .gradient-bg {
@@ -56,7 +56,7 @@
 }
 
 .material-vinyl {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-foreground)) 100%);
+  background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 100%);
 }
 
 .material-lona {
@@ -79,42 +79,43 @@
 
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px rgba(17, 3, 99, 0.3);
 }
 
 :root {
   --radius: 0.625rem;
-  --background: 249 63% 20%;
+  /* Color principal solicitado: #110363 (azul muy oscuro) */
+  --background: 249 63% 12%;
   --foreground: 0 0% 100%;
-  --card: 249 63% 20%;
+  --card: 249 63% 15%;
   --card-foreground: 0 0% 100%;
-  --popover: 249 63% 20%;
+  --popover: 249 63% 15%;
   --popover-foreground: 0 0% 100%;
-  --primary: 249 63% 20%;
+  --primary: 249 63% 12%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 249 63% 20%;
+  --secondary: 249 63% 18%;
   --secondary-foreground: 0 0% 100%;
-  --muted: 249 63% 20%;
-  --muted-foreground: 0 0% 80%;
-  --accent: 249 63% 20%;
-  --accent-foreground: 0 0% 100%;
+  --muted: 249 63% 10%;
+  --muted-foreground: 0 0% 75%;
+  --accent: 45 93% 58%; /* Amarillo dorado para buen contraste */
+  --accent-foreground: 249 63% 12%; /* Texto oscuro sobre amarillo */
   --destructive: 0 84% 60%;
-  --border: 249 63% 30%;
-  --input: 249 63% 25%;
-  --ring: 249 63% 20%;
-  --chart-1: 264 100% 24%;
-  --chart-2: 162 100% 35%;
-  --chart-3: 70 100% 38%;
-  --chart-4: 304 100% 31%;
-  --chart-5: 16 100% 32%;
-  --sidebar: 249 63% 20%;
+  --border: 249 63% 25%;
+  --input: 249 63% 20%;
+  --ring: 45 93% 58%; /* Ring en color acento */
+  --chart-1: 249 63% 12%;
+  --chart-2: 45 93% 58%;
+  --chart-3: 180 100% 50%;
+  --chart-4: 300 100% 60%;
+  --chart-5: 120 100% 40%;
+  --sidebar: 249 63% 14%;
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 249 63% 20%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 249 63% 20%;
+  --sidebar-primary: 45 93% 58%;
+  --sidebar-primary-foreground: 249 63% 12%;
+  --sidebar-accent: 249 63% 18%;
   --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 249 63% 30%;
-  --sidebar-ring: 249 63% 20%;
+  --sidebar-border: 249 63% 25%;
+  --sidebar-ring: 45 93% 58%;
 }
 
 /* Removed dark theme */
