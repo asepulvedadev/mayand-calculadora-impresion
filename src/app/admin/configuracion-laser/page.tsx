@@ -6,7 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Settings, Save, RefreshCw, AlertCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Settings, Save, RefreshCw, AlertCircle, Plus, Edit, Trash2, Eye } from 'lucide-react';
 import { LaserMaterial } from '@/types/laser';
 import { getActiveMaterials } from '@/lib/laserApi';
 
@@ -26,6 +28,22 @@ export default function LaserConfigurationPage() {
     materials: [],
   });
   const [errors, setErrors] = useState<string[]>([]);
+
+  // Estados para CRUD de materiales
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingMaterial, setEditingMaterial] = useState<LaserMaterial | null>(null);
+  const [newMaterial, setNewMaterial] = useState({
+    name: '',
+    thickness: '',
+    sheet_width: '',
+    sheet_height: '',
+    usable_width: '',
+    usable_height: '',
+    price_per_sheet: '',
+    color: '',
+    finish: '',
+  });
 
   useEffect(() => {
     loadConfiguration();
@@ -117,6 +135,116 @@ export default function LaserConfigurationPage() {
     }
   };
 
+  // Funciones CRUD para materiales
+  const handleCreateMaterial = async () => {
+    try {
+      const materialData = {
+        name: newMaterial.name,
+        thickness: parseFloat(newMaterial.thickness),
+        sheet_width: parseFloat(newMaterial.sheet_width),
+        sheet_height: parseFloat(newMaterial.sheet_height),
+        usable_width: parseFloat(newMaterial.usable_width),
+        usable_height: parseFloat(newMaterial.usable_height),
+        price_per_sheet: parseFloat(newMaterial.price_per_sheet),
+        color: newMaterial.color || null,
+        finish: newMaterial.finish || null,
+        is_active: true,
+      };
+
+      const response = await fetch('/api/laser/materials', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(materialData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear el material');
+      }
+
+      // Resetear formulario y recargar
+      setNewMaterial({
+        name: '',
+        thickness: '',
+        sheet_width: '',
+        sheet_height: '',
+        usable_width: '',
+        usable_height: '',
+        price_per_sheet: '',
+        color: '',
+        finish: '',
+      });
+      setIsCreateDialogOpen(false);
+      await loadConfiguration();
+    } catch (error) {
+      console.error('Error creating material:', error);
+      setErrors([error instanceof Error ? error.message : 'Error al crear el material']);
+    }
+  };
+
+  const handleEditMaterial = async () => {
+    if (!editingMaterial) return;
+
+    try {
+      const materialData = {
+        name: editingMaterial.name,
+        thickness: editingMaterial.thickness,
+        sheet_width: editingMaterial.sheet_width,
+        sheet_height: editingMaterial.sheet_height,
+        usable_width: editingMaterial.usable_width,
+        usable_height: editingMaterial.usable_height,
+        price_per_sheet: editingMaterial.price_per_sheet,
+        color: editingMaterial.color || null,
+        finish: editingMaterial.finish || null,
+        is_active: editingMaterial.is_active,
+      };
+
+      const response = await fetch(`/api/laser/materials/${editingMaterial.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(materialData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar el material');
+      }
+
+      setIsEditDialogOpen(false);
+      setEditingMaterial(null);
+      await loadConfiguration();
+    } catch (error) {
+      console.error('Error updating material:', error);
+      setErrors([error instanceof Error ? error.message : 'Error al actualizar el material']);
+    }
+  };
+
+  const handleDeleteMaterial = async (materialId: string) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar este material?')) return;
+
+    try {
+      const response = await fetch(`/api/laser/materials/${materialId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar el material');
+      }
+
+      await loadConfiguration();
+    } catch (error) {
+      console.error('Error deleting material:', error);
+      setErrors([error instanceof Error ? error.message : 'Error al eliminar el material']);
+    }
+  };
+
+  const openEditDialog = (material: LaserMaterial) => {
+    setEditingMaterial(material);
+    setIsEditDialogOpen(true);
+  };
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -194,10 +322,124 @@ export default function LaserConfigurationPage() {
         </CardContent>
       </Card>
 
-      {/* Precios de Materiales */}
+      {/* Gestión de Materiales */}
       <Card>
         <CardHeader>
-          <CardTitle>Precios de Materiales</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Gestión de Materiales</CardTitle>
+            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-green-600 hover:bg-green-700">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nuevo Material
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Crear Nuevo Material</DialogTitle>
+                </DialogHeader>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="new-name">Nombre</Label>
+                    <Input
+                      id="new-name"
+                      value={newMaterial.name}
+                      onChange={(e) => setNewMaterial(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="Ej: MDF 3mm Blanco"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-thickness">Espesor (mm)</Label>
+                    <Input
+                      id="new-thickness"
+                      type="number"
+                      step="0.1"
+                      value={newMaterial.thickness}
+                      onChange={(e) => setNewMaterial(prev => ({ ...prev, thickness: e.target.value }))}
+                      placeholder="3.0"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-sheet-width">Ancho lámina (cm)</Label>
+                    <Input
+                      id="new-sheet-width"
+                      type="number"
+                      value={newMaterial.sheet_width}
+                      onChange={(e) => setNewMaterial(prev => ({ ...prev, sheet_width: e.target.value }))}
+                      placeholder="122"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-sheet-height">Alto lámina (cm)</Label>
+                    <Input
+                      id="new-sheet-height"
+                      type="number"
+                      value={newMaterial.sheet_height}
+                      onChange={(e) => setNewMaterial(prev => ({ ...prev, sheet_height: e.target.value }))}
+                      placeholder="244"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-usable-width">Ancho útil (cm)</Label>
+                    <Input
+                      id="new-usable-width"
+                      type="number"
+                      value={newMaterial.usable_width}
+                      onChange={(e) => setNewMaterial(prev => ({ ...prev, usable_width: e.target.value }))}
+                      placeholder="120"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-usable-height">Alto útil (cm)</Label>
+                    <Input
+                      id="new-usable-height"
+                      type="number"
+                      value={newMaterial.usable_height}
+                      onChange={(e) => setNewMaterial(prev => ({ ...prev, usable_height: e.target.value }))}
+                      placeholder="240"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-price">Precio por lámina ($)</Label>
+                    <Input
+                      id="new-price"
+                      type="number"
+                      step="0.01"
+                      value={newMaterial.price_per_sheet}
+                      onChange={(e) => setNewMaterial(prev => ({ ...prev, price_per_sheet: e.target.value }))}
+                      placeholder="150.00"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-color">Color</Label>
+                    <Input
+                      id="new-color"
+                      value={newMaterial.color}
+                      onChange={(e) => setNewMaterial(prev => ({ ...prev, color: e.target.value }))}
+                      placeholder="Blanco"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-finish">Acabado</Label>
+                    <Input
+                      id="new-finish"
+                      value={newMaterial.finish}
+                      onChange={(e) => setNewMaterial(prev => ({ ...prev, finish: e.target.value }))}
+                      placeholder="Mate"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2 mt-4">
+                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                    Cancelar
+                  </Button>
+                  <Button onClick={handleCreateMaterial}>
+                    Crear Material
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -206,7 +448,12 @@ export default function LaserConfigurationPage() {
                 <div className="flex-1">
                   <h4 className="font-medium">{material.name}</h4>
                   <p className="text-sm text-muted-foreground">
-                    {material.thickness}mm - {material.sheet_width} × {material.sheet_height} cm
+                    {material.thickness}mm - Lámina: {material.sheet_width} × {material.sheet_height} cm
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Área útil: {material.usable_width} × {material.usable_height} cm
+                    {material.color && ` - Color: ${material.color}`}
+                    {material.finish && ` - Acabado: ${material.finish}`}
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
@@ -224,12 +471,130 @@ export default function LaserConfigurationPage() {
                       placeholder="0.00"
                     />
                   </div>
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => openEditDialog(material)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleDeleteMaterial(material.id)}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
+
+      {/* Dialog de edición */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Editar Material</DialogTitle>
+          </DialogHeader>
+          {editingMaterial && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-name">Nombre</Label>
+                <Input
+                  id="edit-name"
+                  value={editingMaterial.name}
+                  onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, name: e.target.value } : null)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-thickness">Espesor (mm)</Label>
+                <Input
+                  id="edit-thickness"
+                  type="number"
+                  step="0.1"
+                  value={editingMaterial.thickness}
+                  onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, thickness: parseFloat(e.target.value) || 0 } : null)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-sheet-width">Ancho lámina (cm)</Label>
+                <Input
+                  id="edit-sheet-width"
+                  type="number"
+                  value={editingMaterial.sheet_width}
+                  onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, sheet_width: parseFloat(e.target.value) || 0 } : null)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-sheet-height">Alto lámina (cm)</Label>
+                <Input
+                  id="edit-sheet-height"
+                  type="number"
+                  value={editingMaterial.sheet_height}
+                  onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, sheet_height: parseFloat(e.target.value) || 0 } : null)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-usable-width">Ancho útil (cm)</Label>
+                <Input
+                  id="edit-usable-width"
+                  type="number"
+                  value={editingMaterial.usable_width}
+                  onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, usable_width: parseFloat(e.target.value) || 0 } : null)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-usable-height">Alto útil (cm)</Label>
+                <Input
+                  id="edit-usable-height"
+                  type="number"
+                  value={editingMaterial.usable_height}
+                  onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, usable_height: parseFloat(e.target.value) || 0 } : null)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-price">Precio por lámina ($)</Label>
+                <Input
+                  id="edit-price"
+                  type="number"
+                  step="0.01"
+                  value={editingMaterial.price_per_sheet}
+                  onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, price_per_sheet: parseFloat(e.target.value) || 0 } : null)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-color">Color</Label>
+                <Input
+                  id="edit-color"
+                  value={editingMaterial.color || ''}
+                  onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, color: e.target.value } : null)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-finish">Acabado</Label>
+                <Input
+                  id="edit-finish"
+                  value={editingMaterial.finish || ''}
+                  onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, finish: e.target.value } : null)}
+                />
+              </div>
+            </div>
+          )}
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleEditMaterial}>
+              Guardar Cambios
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Errores */}
       {errors.length > 0 && (
