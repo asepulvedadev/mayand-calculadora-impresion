@@ -27,12 +27,12 @@ All materials are priced by **linear meters** (height in meters):
 **Normal Prices:**
 - **Vinil**: 150 MXN/linear meter (max width: 150cm)
 - **Vinil Transparente**: 180 MXN/linear meter (max width: 150cm)
-- **Lona**: 75 MXN/linear meter (max width: 180cm)
+- **Lona**: 135 MXN/linear meter (max width: 180cm)
 
 **Promotional Prices** (activated via toggle):
 - **Vinil**: 120 MXN/linear meter
 - **Vinil Transparente**: 160 MXN/linear meter
-- **Lona**: 70 MXN/linear meter
+- **Lona**: 120 MXN/linear meter
 
 - **IVA**: 16% tax applied to all quotes
 - **Height range**: 1-3600 cm (0.01m - 36m)
@@ -90,7 +90,7 @@ All imports use `@/*` path alias mapping to `./src/*` (configured in tsconfig.js
 
 1. **No Tests**: The project has a jest.config.ts but no test files. When adding features, tests are not required unless specifically requested.
 
-2. **Dimension Units**: The app displays "metros lineales" (linear meters) calculated from height only. Do not confuse this with square meters (m²).
+2. **Dimension Units**: All materials (Vinil, Vinil Transparente, and Lona) are priced by "metros lineales" (linear meters) calculated from height only. The app does NOT use square meters (m²) for any material.
 
 3. **Logo Files**: Both light and dark logos exist (`LOGO_LIGHT.svg`, `LOGO_DARK.svg`). Currently only dark logo is used.
 

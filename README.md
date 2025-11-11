@@ -40,15 +40,15 @@ Una aplicación web moderna y elegante para cotizar impresiones de gran formato 
 ## 📋 Requisitos de Negocio
 
 - **Dimensiones Máximas**:
-  - Vinil: Ancho máximo 150cm, largo hasta 360cm
-  - Vinil Transparente: Ancho máximo 150cm, largo hasta 360cm
-  - Lona: Ancho máximo 180cm, largo hasta 360cm
-- **Precios**:
-  - Vinil: $120 MXN/metro lineal (altura), $100 MXN/metro lineal (>10m)
-  - Vinil Transparente: $180 MXN/metro lineal (altura), $150 MXN/metro lineal (>10m)
-  - Lona: $80 MXN/m² (normal), $65 MXN/m² (>10m²)
+  - Vinil: Ancho máximo 150cm, largo hasta 3600cm
+  - Vinil Transparente: Ancho máximo 150cm, largo hasta 3600cm
+  - Lona: Ancho máximo 180cm, largo hasta 3600cm
+- **Precios por Metro Lineal (altura)**:
+  - Vinil: $150 MXN/m (normal), $120 MXN/m (promoción)
+  - Vinil Transparente: $180 MXN/m (normal), $160 MXN/m (promoción)
+  - Lona: $135 MXN/m (normal), $120 MXN/m (promoción)
 - **IVA**: 16%
-- **Unidades**: Metros lineales para vinil, metros cuadrados para lona
+- **Unidades**: Todos los materiales se cobran por metros lineales (altura)
 
 ## 🏗️ Estructura del Proyecto
 

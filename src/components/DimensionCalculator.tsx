@@ -28,21 +28,27 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
   };
 
   const handleWidthChange = (value: string) => {
+    if (value === '') {
+      setWidth(0);
+      return;
+    }
     const num = parseFloat(value);
-    if (!isNaN(num) && num >= 1) {
+    if (!isNaN(num) && num >= 0) {
       const maxWidth = getMaxWidth(formData.material);
-      const clampedWidth = Math.min(maxWidth, Math.max(1, num));
+      const clampedWidth = Math.min(maxWidth, num);
       setWidth(clampedWidth);
-      onChange?.(clampedWidth, formData.height, formData.material, formData.isPromotion);
     }
   };
 
   const handleHeightChange = (value: string) => {
+    if (value === '') {
+      setHeight(0);
+      return;
+    }
     const num = parseFloat(value);
-    if (!isNaN(num) && num >= 1) {
-      const clampedHeight = Math.min(3600, Math.max(1, num));
+    if (!isNaN(num) && num >= 0) {
+      const clampedHeight = Math.min(3600, num);
       setHeight(clampedHeight);
-      onChange?.(formData.width, clampedHeight, formData.material, formData.isPromotion);
     }
   };
 
@@ -54,13 +60,10 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
     if (formData.width > maxWidth) {
       setWidth(maxWidth);
     }
-
-    onChange?.(Math.min(formData.width, maxWidth), formData.height, selectedMaterial, formData.isPromotion);
   };
 
   const handlePromotionChange = (checked: boolean) => {
     setIsPromotion(checked);
-    onChange?.(formData.width, formData.height, formData.material, checked);
   };
 
   return (
@@ -78,11 +81,12 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
              <Input
                id="width"
                type="number"
-               value={formData.width}
+               step="1"
+               value={formData.width === 0 ? '' : formData.width}
                onChange={(e) => handleWidthChange(e.target.value)}
-               min="1"
+               min="0"
                max={getMaxWidth(formData.material)}
-               placeholder={`Ej: ${getMaxWidth(formData.material)}`}
+               placeholder="100"
                className={`border-2 focus:border-primary ${
                  errors.width
                    ? 'border-red-400 bg-red-50 dark:bg-red-900/20'
@@ -97,11 +101,12 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
              <Input
                id="height"
                type="number"
-               value={formData.height}
+               step="1"
+               value={formData.height === 0 ? '' : formData.height}
                onChange={(e) => handleHeightChange(e.target.value)}
-               min="1"
+               min="0"
                max="3600"
-               placeholder="Ej: 100"
+               placeholder="200"
                className={`border-2 focus:border-primary ${
                  errors.height
                    ? 'border-red-400 bg-red-50 dark:bg-red-900/20'
@@ -166,14 +171,14 @@ export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
           </div>
           {formData.isPromotion && (
             <p className="text-xs text-accent px-2 animate-in fade-in">
-              ✨ Precios especiales: Vinil $120, Transp. $160, Lona $70/m
+              ✨ Precios especiales: Vinil $120, Transp. $160, Lona $120/m
             </p>
           )}
         </div>
 
         <div className="text-xs text-muted-foreground bg-muted/50 p-1 rounded-md border-2 border-border/80 shadow-sm">
             <Ruler className="inline h-3 w-3 mr-1" />
-            Metros lineales: {formData.height / 100} m
+            Metros lineales: {(formData.height / 100).toFixed(2)} m
           </div>
       </CardContent>
     </Card>

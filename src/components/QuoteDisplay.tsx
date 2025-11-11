@@ -1,8 +1,9 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { DollarSign, Calculator, Sparkles } from 'lucide-react';
+import { DollarSign, Calculator, Sparkles, MessageCircle } from 'lucide-react';
 import { usePrintCalculatorStore } from '@/lib/stores/printCalculatorStore';
 
 interface QuoteDisplayProps {
@@ -12,6 +13,44 @@ interface QuoteDisplayProps {
 export function QuoteDisplay({ quote: propQuote }: QuoteDisplayProps) {
   const { quote: storeQuote } = usePrintCalculatorStore();
   const quote = propQuote || storeQuote;
+
+  const shareOnWhatsApp = () => {
+    if (!quote) return;
+
+    const message = `🖨️ *Cotización Mayand*${quote.isPromotion ? ' ✨' : ''}
+
+📏 *Dimensiones:*
+• Ancho: ${quote.width} cm
+• Alto: ${quote.height} cm
+• Metros lineales: ${quote.area.toFixed(2)} m
+
+🏷️ *Material:* ${quote.material === 'vinil' ? 'Vinil' :
+                quote.material === 'vinil_transparente' ? 'Vinil Transparente' :
+                'Lona'}${quote.isPromotion ? ' _(Precio Promocional)_' : ''}
+
+💰 *Precios:*
+• Precio unitario: $${quote.unitPrice.toFixed(2)} MXN/m
+• Subtotal: $${quote.subtotal.toFixed(2)} MXN
+• IVA (16%): $${quote.iva.toFixed(2)} MXN
+• *Total con IVA: $${quote.total.toFixed(2)} MXN*
+
+📱 Generado por Mayand`;
+
+    // Detect if it's mobile
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    let whatsappUrl;
+    if (isMobile) {
+      // Use WhatsApp app URL for mobile
+      whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
+    } else {
+      // Use WhatsApp Web for desktop
+      whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    }
+
+    window.open(whatsappUrl, '_blank');
+  };
+
   if (!quote) {
     return (
       <div className="w-full h-full flex items-center justify-center p-6">
@@ -43,8 +82,8 @@ export function QuoteDisplay({ quote: propQuote }: QuoteDisplayProps) {
       <div className="flex-1 flex flex-col justify-between space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-muted/50 p-2 rounded-lg border border-border/60">
-            <p className="text-xs text-muted-foreground">{quote.material === 'lona' ? 'Metros cuadrados' : 'Metros lineales'}</p>
-            <p className="text-lg font-bold">{quote.area.toFixed(2)} {quote.material === 'lona' ? 'm²' : 'm'}</p>
+            <p className="text-xs text-muted-foreground">Metros lineales</p>
+            <p className="text-lg font-bold">{quote.area.toFixed(2)} m</p>
           </div>
           <div className="bg-muted/50 p-2 rounded-lg border border-border/60">
             <p className="text-xs text-muted-foreground">Material</p>
@@ -61,7 +100,7 @@ export function QuoteDisplay({ quote: propQuote }: QuoteDisplayProps) {
         <div className="space-y-1">
           <div className="flex justify-between text-sm">
             <span>Precio unitario</span>
-            <span>${quote.unitPrice.toFixed(2)} MXN/{quote.material === 'lona' ? 'm²' : 'm'}</span>
+            <span>${quote.unitPrice.toFixed(2)} MXN/m</span>
           </div>
           <div className="flex justify-between font-medium text-sm">
             <span>Subtotal</span>
@@ -75,7 +114,7 @@ export function QuoteDisplay({ quote: propQuote }: QuoteDisplayProps) {
 
         <Separator />
 
-        <div className="space-y-1">
+        <div className="space-y-3">
           <div className="flex justify-between text-sm font-semibold">
             <span>Total sin IVA</span>
             <span>${quote.subtotal.toFixed(2)} MXN</span>
@@ -84,6 +123,15 @@ export function QuoteDisplay({ quote: propQuote }: QuoteDisplayProps) {
             <span>Total con IVA</span>
             <span>${quote.total.toFixed(2)} MXN</span>
           </div>
+
+          {/* Botón de compartir debajo del precio */}
+          <Button
+            onClick={shareOnWhatsApp}
+            className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-lg px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-accent/50 hover:border-accent"
+          >
+            <MessageCircle className="h-4 w-4 mr-2" />
+            Compartir Cotización
+          </Button>
         </div>
 
       </div>

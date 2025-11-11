@@ -2,12 +2,19 @@ import { z } from 'zod';
 
 // Esquemas de validación para la calculadora de impresión
 export const printCalculatorSchema = z.object({
-  width: z.number().min(1, 'El ancho debe ser mayor a 0').max(3600, 'El ancho máximo es 3600 cm'),
-  height: z.number().min(1, 'El alto debe ser mayor a 0').max(3600, 'El alto máximo es 3600 cm'),
+  width: z.number().min(0, 'El ancho no puede ser negativo').max(3600, 'El ancho máximo es 3600 cm'),
+  height: z.number().min(0, 'El alto no puede ser negativo').max(3600, 'El alto máximo es 3600 cm'),
   material: z.enum(['vinil', 'lona', 'vinil_transparente'], {
     message: 'Material no válido'
   }),
   isPromotion: z.boolean(),
+}).refine((data) => {
+  // Validación adicional: el ancho no puede exceder el límite del material seleccionado
+  const maxWidthForMaterial = data.material === 'lona' ? 180 : 150;
+  return data.width <= maxWidthForMaterial;
+}, {
+  message: 'El ancho excede el límite para el material seleccionado',
+  path: ['width'], // Error se asigna al campo width
 });
 
 export type PrintCalculatorInput = z.infer<typeof printCalculatorSchema>;
@@ -21,6 +28,13 @@ export const laserCalculatorSchema = z.object({
   cutting_minutes: z.number().min(0.01, 'Los minutos de corte deben ser mayores a 0'),
   requires_assembly: z.boolean(),
   assembly_cost_per_piece: z.number().min(0, 'El costo de ensamblaje no puede ser negativo').optional(),
+}).refine((data) => {
+  // Validación adicional: verificar que las dimensiones no excedan las del material seleccionado
+  // Esta validación se haría en el componente usando la información del material
+  return true; // Por ahora, siempre pasa - se valida en el componente
+}, {
+  message: 'Las dimensiones exceden las del material seleccionado',
+  path: ['piece_width'], // Error se asigna al campo piece_width
 });
 
 export type LaserCalculatorInput = z.infer<typeof laserCalculatorSchema>;

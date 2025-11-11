@@ -25,8 +25,8 @@ interface PrintCalculatorState {
 }
 
 const initialFormData: PrintCalculatorInput = {
-  width: 100,
-  height: 100,
+  width: 0,
+  height: 0,
   material: 'vinil',
   isPromotion: false,
 };
@@ -44,29 +44,33 @@ export const usePrintCalculatorStore = create<PrintCalculatorState>()(
       setWidth: (width) => {
         set((state) => ({
           formData: { ...state.formData, width },
-        }));
-        get().calculateQuote();
+        }), false);
+        // Use setTimeout to ensure state is updated before calculating
+        setTimeout(() => get().calculateQuote(), 0);
       },
 
       setHeight: (height) => {
         set((state) => ({
           formData: { ...state.formData, height },
-        }));
-        get().calculateQuote();
+        }), false);
+        // Use setTimeout to ensure state is updated before calculating
+        setTimeout(() => get().calculateQuote(), 0);
       },
 
       setMaterial: (material) => {
         set((state) => ({
           formData: { ...state.formData, material },
-        }));
-        get().calculateQuote();
+        }), false);
+        // Use setTimeout to ensure state is updated before calculating
+        setTimeout(() => get().calculateQuote(), 0);
       },
 
       setIsPromotion: (isPromotion) => {
         set((state) => ({
           formData: { ...state.formData, isPromotion },
-        }));
-        get().calculateQuote();
+        }), false);
+        // Use setTimeout to ensure state is updated before calculating
+        setTimeout(() => get().calculateQuote(), 0);
       },
 
       updateFormData: (data) => {
@@ -99,6 +103,12 @@ export const usePrintCalculatorStore = create<PrintCalculatorState>()(
       calculateQuote: async () => {
         const { formData, validateForm } = get();
 
+        // Only calculate if both width and height are greater than 0
+        if (formData.width <= 0 || formData.height <= 0) {
+          set({ quote: null });
+          return;
+        }
+
         if (!validateForm()) {
           set({ quote: null });
           return;
@@ -130,7 +140,7 @@ export const usePrintCalculatorStore = create<PrintCalculatorState>()(
       // Reset
       reset: () => {
         set({
-          formData: initialFormData,
+          formData: { ...initialFormData },
           errors: {},
           quote: null,
           isLoading: false,

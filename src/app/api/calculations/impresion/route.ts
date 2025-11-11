@@ -4,7 +4,7 @@ import { Material, QuoteData } from '@/types';
 // Precios de materiales (podrían venir de BD en el futuro)
 const PRICES = {
   vinil: { normal: 150, promotion: 120 }, // 150cm width, MXN/linear meter
-  lona: { normal: 75, promotion: 70 }, // 180cm width, MXN/square meter
+  lona: { normal: 135, promotion: 120 }, // 180cm width, MXN/linear meter
   vinil_transparente: { normal: 180, promotion: 160 } // 150cm width, MXN/linear meter
 };
 
@@ -17,8 +17,8 @@ const PRICES = {
  * @returns QuoteData con todos los cálculos
  */
 function calculateQuote(width: number, height: number, material: Material, isPromotion: boolean = false): QuoteData {
-  // Vinil and vinil_transparente calculate by linear meters, lona by square meters
-  const area = material === 'lona' ? (width / 100) * (height / 100) : height / 100; // for lona: square meters, others: linear meters
+  // All materials calculate by linear meters (height)
+  const area = height / 100; // linear meters
   const unitPrice = isPromotion ? PRICES[material].promotion : PRICES[material].normal;
   const subtotal = area * unitPrice;
   const hasBulkDiscount = false;
@@ -46,11 +46,14 @@ export async function POST(request: NextRequest) {
     const { width, height, material, isPromotion } = body;
 
     // Validaciones básicas
-    if (typeof width !== 'number' || width <= 0) {
-      return NextResponse.json({ error: 'Ancho debe ser un número positivo' }, { status: 400 });
+    if (typeof width !== 'number' || width < 0) {
+      return NextResponse.json({ error: 'Ancho debe ser un número no negativo' }, { status: 400 });
     }
-    if (typeof height !== 'number' || height <= 0) {
-      return NextResponse.json({ error: 'Alto debe ser un número positivo' }, { status: 400 });
+    if (typeof height !== 'number' || height < 0) {
+      return NextResponse.json({ error: 'Alto debe ser un número no negativo' }, { status: 400 });
+    }
+    if (width === 0 || height === 0) {
+      return NextResponse.json({ error: 'Ancho y alto deben ser mayores a 0 para calcular' }, { status: 400 });
     }
     if (!['vinil', 'lona', 'vinil_transparente'].includes(material)) {
       return NextResponse.json({ error: 'Material no válido' }, { status: 400 });
