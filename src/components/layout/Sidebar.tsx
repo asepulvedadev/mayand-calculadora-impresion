@@ -42,7 +42,16 @@ export function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Logo and Collapse Button */}
           <div className="flex items-center justify-between h-16 px-4 border-b border-white/20">
-            {!isCollapsed && (
+            {isCollapsed ? (
+              <Link href="/" className="flex items-center justify-center w-full">
+                <Image
+                  src="/LOGO_DARK.svg"
+                  alt="Mayand Logo"
+                  width={32}
+                  height={32}
+                />
+              </Link>
+            ) : (
               <Link href="/" className="flex items-center space-x-2">
                 <Image
                   src="/LOGO_DARK.svg"

@@ -20,7 +20,6 @@ export interface LaserQuote {
   material: LaserMaterial;
   piece_width: number; // en cm
   piece_height: number; // en cm
-  quantity: number;
   cutting_minutes: number;
   requires_assembly: boolean;
   assembly_cost_per_piece?: number;
@@ -39,7 +38,6 @@ export interface LaserQuoteInput {
   material_id: string;
   piece_width: number;
   piece_height: number;
-  quantity: number;
   cutting_minutes: number;
   requires_assembly: boolean;
   assembly_cost_per_piece?: number;

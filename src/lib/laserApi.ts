@@ -74,7 +74,6 @@ export async function createQuote(quote: Omit<LaserQuote, 'id' | 'created_at' | 
     material_id: quote.material_id,
     piece_width: quote.piece_width,
     piece_height: quote.piece_height,
-    quantity: quote.quantity,
     cutting_minutes: quote.cutting_minutes,
     requires_assembly: quote.requires_assembly,
     assembly_cost_per_piece: quote.assembly_cost_per_piece,

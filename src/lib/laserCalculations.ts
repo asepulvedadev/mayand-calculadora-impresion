@@ -9,7 +9,7 @@ export function calculateLaserQuote(
 ): LaserQuote {
   // PASO 1: Calcular área y material necesario
   const pieceArea = input.piece_width * input.piece_height; // cm²
-  const totalAreaNeeded = pieceArea * input.quantity; // cm²
+  const totalAreaNeeded = pieceArea; // cm² (sin multiplicar por cantidad)
   const sheetArea = material.sheet_width * material.sheet_height; // cm²
 
   // Precio por cm²
@@ -23,7 +23,7 @@ export function calculateLaserQuote(
   const materialCost = totalAreaNeeded * pricePerCm2; // Costo real del material usado
   const cuttingCost = input.cutting_minutes * cuttingRatePerMinute;
   const assemblyCost = input.requires_assembly
-    ? input.quantity * (input.assembly_cost_per_piece || assemblyCostPerPiece)
+    ? (input.assembly_cost_per_piece || assemblyCostPerPiece)
     : 0;
 
   // PASO 3: Subtotal de costos directos
@@ -47,7 +47,6 @@ export function calculateLaserQuote(
     material,
     piece_width: input.piece_width,
     piece_height: input.piece_height,
-    quantity: input.quantity,
     cutting_minutes: input.cutting_minutes,
     requires_assembly: input.requires_assembly,
     assembly_cost_per_piece: input.assembly_cost_per_piece || assemblyCostPerPiece,
@@ -88,7 +87,6 @@ export function validateLaserQuoteInput(input: LaserQuoteInput): string[] {
 
   if (input.piece_width <= 0) errors.push('El ancho debe ser mayor a 0');
   if (input.piece_height <= 0) errors.push('El alto debe ser mayor a 0');
-  if (input.quantity <= 0) errors.push('La cantidad debe ser mayor a 0');
   if (input.cutting_minutes <= 0) errors.push('Los minutos de corte deben ser mayores a 0');
 
   // Validaciones de límites de máquina
