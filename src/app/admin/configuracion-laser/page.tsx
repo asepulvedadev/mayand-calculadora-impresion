@@ -306,6 +306,7 @@ export default function LaserConfigurationPage() {
                 onChange={(e) => handleConfigChange('cutting_rate_per_minute', e.target.value)}
                 placeholder="8.00"
               />
+              <p className="text-xs text-muted-foreground">Costo actual: ${config.cutting_rate_per_minute.toFixed(2)} MXN/min</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="profit_margin">Margen de utilidad (%)</Label>
@@ -317,6 +318,7 @@ export default function LaserConfigurationPage() {
                 onChange={(e) => handleConfigChange('profit_margin', parseFloat(e.target.value) / 100)}
                 placeholder="50.00"
               />
+              <p className="text-xs text-muted-foreground">Utilidad actual: {(config.profit_margin * 100).toFixed(2)}%</p>
             </div>
           </div>
         </CardContent>
