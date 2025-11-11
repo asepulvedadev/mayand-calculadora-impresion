@@ -1,5 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { LaserMaterial } from '@/types/laser';
+
+// Almacenamiento temporal de materiales en memoria (reemplazar con DB cuando esté disponible)
+// Usar global para compartir entre diferentes rutas
+const getMaterials = (): LaserMaterial[] => {
+  if (typeof (global as { laserMaterials?: LaserMaterial[] }).laserMaterials === 'undefined') {
+    (global as { laserMaterials?: LaserMaterial[] }).laserMaterials = [
+      {
+        id: '1',
+        name: 'MDF 3mm Blanco',
+        thickness: 3,
+        sheet_width: 122,
+        sheet_height: 244,
+        usable_width: 120,
+        usable_height: 240,
+        price_per_sheet: 250,
+        color: 'Blanco',
+        finish: 'Mate',
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: '2',
+        name: 'Acrílico 3mm Transparente',
+        thickness: 3,
+        sheet_width: 122,
+        sheet_height: 244,
+        usable_width: 120,
+        usable_height: 240,
+        price_per_sheet: 450,
+        color: 'Transparente',
+        finish: 'Brillante',
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+    ];
+  }
+  return (global as { laserMaterials?: LaserMaterial[] }).laserMaterials || [];
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,36 +73,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Crear material
-    const { data, error } = await supabase
-      .from('laser_materials')
-      .insert({
-        name,
-        thickness,
-        sheet_width,
-        sheet_height,
-        usable_width,
-        usable_height,
-        price_per_sheet,
-        color,
-        finish,
-        is_active,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .select();
+    // TODO: Guardar en base de datos cuando esté disponible
+    // Por ahora, guardar en memoria
+    const materials = getMaterials();
+    const newMaterial: LaserMaterial = {
+      id: String(Date.now()),
+      name,
+      thickness,
+      sheet_width,
+      sheet_height,
+      usable_width,
+      usable_height,
+      price_per_sheet,
+      color,
+      finish,
+      is_active,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
 
-    if (error) {
-      console.error('Error creating material:', error);
-      return NextResponse.json(
-        { error: 'Error al crear el material' },
-        { status: 500 }
-      );
-    }
+    materials.push(newMaterial);
+
+    // Asegurarse de que se guarde en el global
+    (global as { laserMaterials?: LaserMaterial[] }).laserMaterials = materials;
 
     return NextResponse.json({
       success: true,
-      data: data[0],
+      data: newMaterial,
       message: 'Material creado exitosamente'
     });
 
@@ -77,23 +114,16 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const { data, error } = await supabase
-      .from('laser_materials')
-      .select('*')
-      .eq('is_active', true)
-      .order('name');
-
-    if (error) {
-      console.error('Error fetching materials:', error);
-      return NextResponse.json(
-        { error: 'Error al obtener los materiales' },
-        { status: 500 }
-      );
-    }
+    // TODO: Obtener de base de datos cuando esté disponible
+    // Por ahora, retornar materiales en memoria
+    const materials = getMaterials();
+    const activeMaterials = materials
+      .filter(m => m.is_active)
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     return NextResponse.json({
       success: true,
-      data,
+      data: activeMaterials,
     });
 
   } catch (error) {

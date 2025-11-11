@@ -1,12 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { LaserMaterial } from '@/types/laser';
+
+// Nota: Este es un almacenamiento temporal. Los datos se comparten con ../route.ts
+// En producción, usar una base de datos real
+const getMaterials = (): LaserMaterial[] => {
+  if (typeof (global as { laserMaterials?: LaserMaterial[] }).laserMaterials === 'undefined') {
+    (global as { laserMaterials?: LaserMaterial[] }).laserMaterials = [
+      {
+        id: '1',
+        name: 'MDF 3mm Blanco',
+        thickness: 3,
+        sheet_width: 122,
+        sheet_height: 244,
+        usable_width: 120,
+        usable_height: 240,
+        price_per_sheet: 250,
+        color: 'Blanco',
+        finish: 'Mate',
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: '2',
+        name: 'Acrílico 3mm Transparente',
+        thickness: 3,
+        sheet_width: 122,
+        sheet_height: 244,
+        usable_width: 120,
+        usable_height: 240,
+        price_per_sheet: 450,
+        color: 'Transparente',
+        finish: 'Brillante',
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+    ];
+  }
+  return (global as { laserMaterials?: LaserMaterial[] }).laserMaterials || [];
+};
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { price_per_sheet } = await request.json();
 
     // Validar datos
@@ -17,34 +57,33 @@ export async function PATCH(
       );
     }
 
-    // Actualizar precio del material
-    const { data, error } = await supabase
-      .from('laser_materials')
-      .update({
-        price_per_sheet,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-      .select();
+    // TODO: Actualizar en base de datos cuando esté disponible
+    // Por ahora, actualizar en memoria
+    const materials = getMaterials();
+    const materialIndex = materials.findIndex(m => m.id === id);
 
-    if (error) {
-      console.error('Error updating material price:', error);
-      return NextResponse.json(
-        { error: 'Error al actualizar el precio del material' },
-        { status: 500 }
-      );
-    }
-
-    if (!data || data.length === 0) {
+    if (materialIndex === -1) {
       return NextResponse.json(
         { error: 'Material no encontrado' },
         { status: 404 }
       );
     }
 
+    // Actualizar el material en el global
+    const updatedMaterial = {
+      ...materials[materialIndex],
+      price_per_sheet,
+      updated_at: new Date().toISOString(),
+    };
+
+    materials[materialIndex] = updatedMaterial;
+
+    // Asegurarse de que se guarde en el global
+    (global as { laserMaterials?: LaserMaterial[] }).laserMaterials = materials;
+
     return NextResponse.json({
       success: true,
-      data: data[0],
+      data: updatedMaterial,
       message: 'Precio actualizado exitosamente'
     });
 
@@ -59,10 +98,10 @@ export async function PATCH(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const {
       name,
       thickness,
@@ -93,43 +132,42 @@ export async function PUT(
       );
     }
 
-    // Actualizar material completo
-    const { data, error } = await supabase
-      .from('laser_materials')
-      .update({
-        name,
-        thickness,
-        sheet_width,
-        sheet_height,
-        usable_width,
-        usable_height,
-        price_per_sheet,
-        color,
-        finish,
-        is_active,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-      .select();
+    // TODO: Actualizar en base de datos cuando esté disponible
+    // Por ahora, actualizar en memoria
+    const materials = getMaterials();
+    const materialIndex = materials.findIndex(m => m.id === id);
 
-    if (error) {
-      console.error('Error updating material:', error);
-      return NextResponse.json(
-        { error: 'Error al actualizar el material' },
-        { status: 500 }
-      );
-    }
-
-    if (!data || data.length === 0) {
+    if (materialIndex === -1) {
       return NextResponse.json(
         { error: 'Material no encontrado' },
         { status: 404 }
       );
     }
 
+    // Actualizar el material completo
+    const updatedMaterial = {
+      ...materials[materialIndex],
+      name,
+      thickness,
+      sheet_width,
+      sheet_height,
+      usable_width,
+      usable_height,
+      price_per_sheet,
+      color,
+      finish,
+      is_active,
+      updated_at: new Date().toISOString(),
+    };
+
+    materials[materialIndex] = updatedMaterial;
+
+    // Asegurarse de que se guarde en el global
+    (global as { laserMaterials?: LaserMaterial[] }).laserMaterials = materials;
+
     return NextResponse.json({
       success: true,
-      data: data[0],
+      data: updatedMaterial,
       message: 'Material actualizado exitosamente'
     });
 
@@ -144,39 +182,38 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
-    // En lugar de eliminar físicamente, marcar como inactivo
-    const { data, error } = await supabase
-      .from('laser_materials')
-      .update({
-        is_active: false,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-      .select();
+    // TODO: Eliminar en base de datos cuando esté disponible
+    // Por ahora, marcar como inactivo en memoria
+    const materials = getMaterials();
+    const materialIndex = materials.findIndex(m => m.id === id);
 
-    if (error) {
-      console.error('Error deactivating material:', error);
-      return NextResponse.json(
-        { error: 'Error al eliminar el material' },
-        { status: 500 }
-      );
-    }
-
-    if (!data || data.length === 0) {
+    if (materialIndex === -1) {
       return NextResponse.json(
         { error: 'Material no encontrado' },
         { status: 404 }
       );
     }
 
+    // Marcar como inactivo
+    const updatedMaterial = {
+      ...materials[materialIndex],
+      is_active: false,
+      updated_at: new Date().toISOString(),
+    };
+
+    materials[materialIndex] = updatedMaterial;
+
+    // Asegurarse de que se guarde en el global
+    (global as { laserMaterials?: LaserMaterial[] }).laserMaterials = materials;
+
     return NextResponse.json({
       success: true,
-      data: data[0],
+      data: updatedMaterial,
       message: 'Material eliminado exitosamente'
     });
 
