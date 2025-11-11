@@ -451,22 +451,23 @@ export default function LaserConfigurationPage() {
                   Nuevo Material
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Crear Nuevo Material</DialogTitle>
+                  <DialogTitle className="text-xl font-semibold">Crear Nuevo Material</DialogTitle>
                 </DialogHeader>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="new-name">Nombre</Label>
+                <div className="grid grid-cols-2 gap-6 py-4">
+                  <div className="space-y-3">
+                    <Label htmlFor="new-name" className="text-sm font-medium">Nombre del Material *</Label>
                     <Input
                       id="new-name"
                       value={newMaterial.name}
                       onChange={(e) => setNewMaterial(prev => ({ ...prev, name: e.target.value }))}
                       placeholder="Ej: MDF 3mm Blanco"
+                      className="h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-thickness">Espesor (mm)</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="new-thickness" className="text-sm font-medium">Espesor (mm) *</Label>
                     <Input
                       id="new-thickness"
                       type="number"
@@ -474,50 +475,55 @@ export default function LaserConfigurationPage() {
                       value={newMaterial.thickness}
                       onChange={(e) => setNewMaterial(prev => ({ ...prev, thickness: e.target.value }))}
                       placeholder="3.0"
+                      className="h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-sheet-width">Ancho lámina (cm)</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="new-sheet-width" className="text-sm font-medium">Ancho lámina (cm) *</Label>
                     <Input
                       id="new-sheet-width"
                       type="number"
                       value={newMaterial.sheet_width}
                       onChange={(e) => setNewMaterial(prev => ({ ...prev, sheet_width: e.target.value }))}
                       placeholder="122"
+                      className="h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-sheet-height">Alto lámina (cm)</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="new-sheet-height" className="text-sm font-medium">Alto lámina (cm) *</Label>
                     <Input
                       id="new-sheet-height"
                       type="number"
                       value={newMaterial.sheet_height}
                       onChange={(e) => setNewMaterial(prev => ({ ...prev, sheet_height: e.target.value }))}
                       placeholder="244"
+                      className="h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-usable-width">Ancho útil (cm)</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="new-usable-width" className="text-sm font-medium">Ancho útil (cm) *</Label>
                     <Input
                       id="new-usable-width"
                       type="number"
                       value={newMaterial.usable_width}
                       onChange={(e) => setNewMaterial(prev => ({ ...prev, usable_width: e.target.value }))}
                       placeholder="120"
+                      className="h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-usable-height">Alto útil (cm)</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="new-usable-height" className="text-sm font-medium">Alto útil (cm) *</Label>
                     <Input
                       id="new-usable-height"
                       type="number"
                       value={newMaterial.usable_height}
                       onChange={(e) => setNewMaterial(prev => ({ ...prev, usable_height: e.target.value }))}
                       placeholder="240"
+                      className="h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-price">Precio por lámina ($)</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="new-price" className="text-sm font-medium">Precio por lámina ($) *</Label>
                     <Input
                       id="new-price"
                       type="number"
@@ -525,33 +531,54 @@ export default function LaserConfigurationPage() {
                       value={newMaterial.price_per_sheet}
                       onChange={(e) => setNewMaterial(prev => ({ ...prev, price_per_sheet: e.target.value }))}
                       placeholder="150.00"
+                      className="h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-color">Color</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="new-color" className="text-sm font-medium">Color</Label>
                     <Input
                       id="new-color"
                       value={newMaterial.color}
                       onChange={(e) => setNewMaterial(prev => ({ ...prev, color: e.target.value }))}
                       placeholder="Blanco"
+                      className="h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-finish">Acabado</Label>
+                  <div className="space-y-3 col-span-2">
+                    <Label htmlFor="new-finish" className="text-sm font-medium">Acabado</Label>
                     <Input
                       id="new-finish"
                       value={newMaterial.finish}
                       onChange={(e) => setNewMaterial(prev => ({ ...prev, finish: e.target.value }))}
                       placeholder="Mate"
+                      className="h-10"
                     />
                   </div>
                 </div>
-                <div className="flex justify-end gap-2 mt-4">
-                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsCreateDialogOpen(false)}
+                    className="px-6 py-2"
+                  >
                     Cancelar
                   </Button>
-                  <Button onClick={handleCreateMaterial}>
-                    Crear Material
+                  <Button
+                    onClick={handleCreateMaterial}
+                    disabled={saving}
+                    className="px-6 py-2 bg-green-600 hover:bg-green-700"
+                  >
+                    {saving ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        Creando...
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Crear Material
+                      </>
+                    )}
                   </Button>
                 </div>
               </DialogContent>
@@ -614,100 +641,127 @@ export default function LaserConfigurationPage() {
 
       {/* Dialog de edición */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Editar Material</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">Editar Material</DialogTitle>
           </DialogHeader>
           {editingMaterial && (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-name">Nombre</Label>
+            <div className="grid grid-cols-2 gap-6 py-4">
+              <div className="space-y-3">
+                <Label htmlFor="edit-name" className="text-sm font-medium">Nombre del Material *</Label>
                 <Input
                   id="edit-name"
                   value={editingMaterial.name}
                   onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, name: e.target.value } : null)}
+                  className="h-10"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-thickness">Espesor (mm)</Label>
+              <div className="space-y-3">
+                <Label htmlFor="edit-thickness" className="text-sm font-medium">Espesor (mm) *</Label>
                 <Input
                   id="edit-thickness"
                   type="number"
                   step="0.1"
                   value={editingMaterial.thickness}
                   onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, thickness: parseFloat(e.target.value) || 0 } : null)}
+                  className="h-10"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-sheet-width">Ancho lámina (cm)</Label>
+              <div className="space-y-3">
+                <Label htmlFor="edit-sheet-width" className="text-sm font-medium">Ancho lámina (cm) *</Label>
                 <Input
                   id="edit-sheet-width"
                   type="number"
                   value={editingMaterial.sheet_width}
                   onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, sheet_width: parseFloat(e.target.value) || 0 } : null)}
+                  className="h-10"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-sheet-height">Alto lámina (cm)</Label>
+              <div className="space-y-3">
+                <Label htmlFor="edit-sheet-height" className="text-sm font-medium">Alto lámina (cm) *</Label>
                 <Input
                   id="edit-sheet-height"
                   type="number"
                   value={editingMaterial.sheet_height}
                   onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, sheet_height: parseFloat(e.target.value) || 0 } : null)}
+                  className="h-10"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-usable-width">Ancho útil (cm)</Label>
+              <div className="space-y-3">
+                <Label htmlFor="edit-usable-width" className="text-sm font-medium">Ancho útil (cm) *</Label>
                 <Input
                   id="edit-usable-width"
                   type="number"
                   value={editingMaterial.usable_width}
                   onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, usable_width: parseFloat(e.target.value) || 0 } : null)}
+                  className="h-10"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-usable-height">Alto útil (cm)</Label>
+              <div className="space-y-3">
+                <Label htmlFor="edit-usable-height" className="text-sm font-medium">Alto útil (cm) *</Label>
                 <Input
                   id="edit-usable-height"
                   type="number"
                   value={editingMaterial.usable_height}
                   onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, usable_height: parseFloat(e.target.value) || 0 } : null)}
+                  className="h-10"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-price">Precio por lámina ($)</Label>
+              <div className="space-y-3">
+                <Label htmlFor="edit-price" className="text-sm font-medium">Precio por lámina ($) *</Label>
                 <Input
                   id="edit-price"
                   type="number"
                   step="0.01"
                   value={editingMaterial.price_per_sheet}
                   onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, price_per_sheet: parseFloat(e.target.value) || 0 } : null)}
+                  className="h-10"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-color">Color</Label>
+              <div className="space-y-3">
+                <Label htmlFor="edit-color" className="text-sm font-medium">Color</Label>
                 <Input
                   id="edit-color"
                   value={editingMaterial.color || ''}
                   onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, color: e.target.value } : null)}
+                  className="h-10"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-finish">Acabado</Label>
+              <div className="space-y-3 col-span-2">
+                <Label htmlFor="edit-finish" className="text-sm font-medium">Acabado</Label>
                 <Input
                   id="edit-finish"
                   value={editingMaterial.finish || ''}
                   onChange={(e) => setEditingMaterial(prev => prev ? { ...prev, finish: e.target.value } : null)}
+                  className="h-10"
                 />
               </div>
             </div>
           )}
-          <div className="flex justify-end gap-2 mt-4">
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+          <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
+            <Button
+              variant="outline"
+              onClick={() => setIsEditDialogOpen(false)}
+              className="px-6 py-2"
+            >
               Cancelar
             </Button>
-            <Button onClick={handleEditMaterial}>
-              Guardar Cambios
+            <Button
+              onClick={handleEditMaterial}
+              disabled={saving}
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700"
+            >
+              {saving ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Guardando...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Guardar Cambios
+                </>
+              )}
             </Button>
           </div>
         </DialogContent>

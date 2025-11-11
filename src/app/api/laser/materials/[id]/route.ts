@@ -108,8 +108,8 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // Eliminar material usando Supabase (marcar como inactivo)
-    await updateMaterial(id, { is_active: false });
+    // Eliminar material usando Supabase (eliminar físicamente)
+    await deleteMaterial(id);
 
     return NextResponse.json({
       success: true,
