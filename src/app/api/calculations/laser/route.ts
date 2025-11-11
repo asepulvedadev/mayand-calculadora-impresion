@@ -34,7 +34,7 @@ function calculateLaserQuote(
   const materialCost = totalAreaNeeded * pricePerCm2; // Costo real del material usado
   const cuttingCost = input.cutting_minutes * cuttingRatePerMinute;
   const assemblyCost = input.requires_assembly
-    ? input.quantity * (input.assembly_cost_per_piece || assemblyCostPerPiece)
+    ? (input.assembly_cost_per_piece || assemblyCostPerPiece)
     : 0;
 
   // PASO 3: Subtotal de costos directos
@@ -58,7 +58,6 @@ function calculateLaserQuote(
     material,
     piece_width: input.piece_width,
     piece_height: input.piece_height,
-    quantity: input.quantity,
     cutting_minutes: input.cutting_minutes,
     requires_assembly: input.requires_assembly,
     assembly_cost_per_piece: input.assembly_cost_per_piece || assemblyCostPerPiece,
@@ -84,7 +83,6 @@ function validateLaserQuoteInput(input: LaserQuoteInput): string[] {
 
   if (input.piece_width <= 0) errors.push('El ancho debe ser mayor a 0');
   if (input.piece_height <= 0) errors.push('El alto debe ser mayor a 0');
-  if (input.quantity <= 0) errors.push('La cantidad debe ser mayor a 0');
   if (input.cutting_minutes <= 0) errors.push('Los minutos de corte deben ser mayores a 0');
 
   // Validaciones de límites de máquina
@@ -110,21 +108,19 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validar entrada básica
-    const parsedQuantity = parseInt(quantity);
     const parsedPieceWidth = parseFloat(piece_width);
     const parsedPieceHeight = parseFloat(piece_height);
+    const parsedQuantity = parseFloat(quantity);
     const parsedCuttingMinutes = parseFloat(cutting_minutes);
     const parsedAssemblyCost = assembly_cost_per_piece ? parseFloat(assembly_cost_per_piece) : undefined;
-
-    // Validar que los parses sean números válidos
-    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
-      return NextResponse.json({ error: 'Cantidad debe ser un número entero positivo' }, { status: 400 });
-    }
     if (isNaN(parsedPieceWidth) || parsedPieceWidth <= 0) {
       return NextResponse.json({ error: 'Ancho de pieza debe ser un número positivo' }, { status: 400 });
     }
     if (isNaN(parsedPieceHeight) || parsedPieceHeight <= 0) {
       return NextResponse.json({ error: 'Alto de pieza debe ser un número positivo' }, { status: 400 });
+    }
+    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+      return NextResponse.json({ error: 'Cantidad debe ser un número positivo' }, { status: 400 });
     }
     if (isNaN(parsedCuttingMinutes) || parsedCuttingMinutes <= 0) {
       return NextResponse.json({ error: 'Minutos de corte deben ser un número positivo' }, { status: 400 });

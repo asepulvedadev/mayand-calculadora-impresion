@@ -24,6 +24,7 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
     material_id: '',
     piece_width: '',
     piece_height: '',
+    quantity: '',
     cutting_minutes: '',
     requires_assembly: false,
     assembly_cost_per_piece: '',
@@ -66,6 +67,7 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
       material_id: formData.material_id,
       piece_width: parseFloat(formData.piece_width),
       piece_height: parseFloat(formData.piece_height),
+      quantity: parseFloat(formData.quantity),
       cutting_minutes: parseFloat(formData.cutting_minutes),
       requires_assembly: formData.requires_assembly,
       assembly_cost_per_piece: formData.assembly_cost_per_piece ? parseFloat(formData.assembly_cost_per_piece) : undefined,
@@ -89,6 +91,7 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
           material_id: formData.material_id,
           piece_width: formData.piece_width,
           piece_height: formData.piece_height,
+          quantity: formData.quantity,
           cutting_minutes: formData.cutting_minutes,
           requires_assembly: formData.requires_assembly,
           assembly_cost_per_piece: formData.assembly_cost_per_piece || undefined,
@@ -207,6 +210,19 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
                 placeholder="80"
               />
             </div>
+          </div>
+
+          {/* Quantity */}
+          <div className="space-y-2">
+            <Label htmlFor="quantity">Cantidad de piezas</Label>
+            <Input
+              id="quantity"
+              type="number"
+              step="1"
+              value={formData.quantity}
+              onChange={(e) => handleInputChange('quantity', e.target.value)}
+              placeholder="1"
+            />
           </div>
 
           {/* Cutting Time */}
