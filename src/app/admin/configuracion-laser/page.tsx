@@ -121,7 +121,9 @@ export default function LaserConfigurationPage() {
         });
 
         if (!materialResponse.ok) {
-          throw new Error(`Error al guardar precio del material ${material.name}`);
+          const errorData = await materialResponse.json();
+          console.error('Error response:', errorData);
+          throw new Error(`Error al guardar precio del material ${material.name}: ${errorData.error || 'Material no encontrado'}`);
         }
       }
 
