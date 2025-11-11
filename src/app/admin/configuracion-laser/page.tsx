@@ -451,7 +451,7 @@ export default function LaserConfigurationPage() {
                   Nuevo Material
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-blue-50 dark:bg-blue-950/20">
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-secondary/20">
                 <DialogHeader>
                   <DialogTitle className="text-xl font-semibold">Crear Nuevo Material</DialogTitle>
                 </DialogHeader>
@@ -641,7 +641,7 @@ export default function LaserConfigurationPage() {
 
       {/* Dialog de edición */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-blue-50 dark:bg-blue-950/20">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-secondary/20">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">Editar Material</DialogTitle>
           </DialogHeader>
