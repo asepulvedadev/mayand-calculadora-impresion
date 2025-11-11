@@ -8,11 +8,7 @@ import { Calculator, Ruler, Sparkles } from 'lucide-react';
 import { usePrintCalculatorStore } from '@/lib/stores/printCalculatorStore';
 import { Material } from '@/types';
 
-interface DimensionCalculatorProps {
-  onChange?: (width: number, height: number, material: Material, isPromotion: boolean) => void;
-}
-
-export function DimensionCalculator({ onChange }: DimensionCalculatorProps) {
+export function DimensionCalculator() {
   const {
     formData,
     errors,

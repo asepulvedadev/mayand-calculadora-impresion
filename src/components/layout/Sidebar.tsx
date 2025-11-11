@@ -4,13 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { Calculator, Scissors, Home, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calculator, Scissors, Home, Menu, X, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Inicio', href: '/', icon: Home },
   { name: 'Impresión', href: '/calculadora', icon: Calculator },
   { name: 'Corte Láser', href: '/corte-laser', icon: Scissors },
+  { name: 'Configuración Láser', href: '/admin/configuracion-laser', icon: Settings },
 ];
 
 export function Sidebar() {
