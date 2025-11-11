@@ -23,11 +23,12 @@ export default function LaserConfigurationPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [config, setConfig] = useState<LaserConfig>({
-    cutting_rate_per_minute: 8,
-    profit_margin: 0.50,
+    cutting_rate_per_minute: 0,
+    profit_margin: 0,
     materials: [],
   });
   const [errors, setErrors] = useState<string[]>([]);
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   // Estados para CRUD de materiales
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -51,9 +52,40 @@ export default function LaserConfigurationPage() {
 
   const loadConfiguration = async () => {
     try {
+      // Cargar materiales
       const data = await getActiveMaterials();
       setMaterials(data);
-      setConfig(prev => ({ ...prev, materials: data }));
+
+      // Cargar configuración general
+      try {
+        const configResponse = await fetch('/api/laser/config');
+        if (configResponse.ok) {
+          const configData = await configResponse.json();
+          setConfig(prev => ({
+            ...prev,
+            cutting_rate_per_minute: configData.data.cutting_rate_per_minute,
+            profit_margin: configData.data.profit_margin,
+            materials: data
+          }));
+        } else {
+          // Valores por defecto si no hay configuración guardada
+          setConfig(prev => ({
+            ...prev,
+            cutting_rate_per_minute: 8,
+            profit_margin: 0.50,
+            materials: data
+          }));
+        }
+      } catch (configError) {
+        console.error('Error loading config:', configError);
+        // Valores por defecto en caso de error
+        setConfig(prev => ({
+          ...prev,
+          cutting_rate_per_minute: 8,
+          profit_margin: 0.50,
+          materials: data
+        }));
+      }
     } catch (error) {
       console.error('Error loading configuration:', error);
       setErrors(['Error al cargar la configuración']);
@@ -86,9 +118,10 @@ export default function LaserConfigurationPage() {
     }));
   };
 
-  const handleSave = async () => {
+  const handleSaveConfig = async () => {
     setSaving(true);
     setErrors([]);
+    setSuccessMessage('');
 
     try {
       // Guardar configuración general
@@ -104,10 +137,39 @@ export default function LaserConfigurationPage() {
       });
 
       if (!generalConfigResponse.ok) {
-        const errorData = await generalConfigResponse.json();
-        throw new Error(errorData.error || 'Error al guardar configuración general');
+        let errorMessage = 'Error al guardar configuración general';
+        try {
+          const errorData = await generalConfigResponse.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (jsonError) {
+          console.error('Error parsing error response:', jsonError);
+        }
+        throw new Error(errorMessage);
       }
 
+      // Recargar configuración para confirmar cambios
+      await loadConfiguration();
+
+      // Mostrar notificación de éxito
+      setSuccessMessage('✅ Configuración guardada exitosamente');
+
+      // Limpiar mensaje después de 5 segundos
+      setTimeout(() => setSuccessMessage(''), 5000);
+
+    } catch (error) {
+      console.error('Error saving configuration:', error);
+      setErrors([error instanceof Error ? error.message : 'Error al guardar la configuración']);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSaveMaterials = async () => {
+    setSaving(true);
+    setErrors([]);
+    setSuccessMessage('');
+
+    try {
       // Guardar precios de materiales
       for (const material of config.materials) {
         const materialResponse = await fetch(`/api/laser/materials/${material.id}`, {
@@ -121,18 +183,30 @@ export default function LaserConfigurationPage() {
         });
 
         if (!materialResponse.ok) {
-          const errorData = await materialResponse.json();
-          console.error('Error response:', errorData);
-          throw new Error(`Error al guardar precio del material ${material.name}: ${errorData.error || 'Material no encontrado'}`);
+          let errorMessage = `Error al guardar precio del material ${material.name}`;
+          try {
+            const errorData = await materialResponse.json();
+            console.error('Error response:', errorData);
+            errorMessage = `${errorMessage}: ${errorData.error || 'Material no encontrado'}`;
+          } catch (jsonError) {
+            console.error('Error parsing material error response:', jsonError);
+          }
+          throw new Error(errorMessage);
         }
       }
 
       // Recargar configuración para confirmar cambios
       await loadConfiguration();
-      setErrors([]);
+
+      // Mostrar notificación de éxito
+      setSuccessMessage('✅ Precios de materiales guardados exitosamente');
+
+      // Limpiar mensaje después de 5 segundos
+      setTimeout(() => setSuccessMessage(''), 5000);
+
     } catch (error) {
-      console.error('Error saving configuration:', error);
-      setErrors([error instanceof Error ? error.message : 'Error al guardar la configuración']);
+      console.error('Error saving materials:', error);
+      setErrors([error instanceof Error ? error.message : 'Error al guardar los precios de materiales']);
     } finally {
       setSaving(false);
     }
@@ -163,7 +237,14 @@ export default function LaserConfigurationPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Error al crear el material');
+        let errorMessage = 'Error al crear el material';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (jsonError) {
+          console.error('Error parsing create material error response:', jsonError);
+        }
+        throw new Error(errorMessage);
       }
 
       // Resetear formulario y recargar
@@ -180,6 +261,11 @@ export default function LaserConfigurationPage() {
       });
       setIsCreateDialogOpen(false);
       await loadConfiguration();
+
+      // Mostrar notificación de éxito
+      setSuccessMessage('✅ Material creado exitosamente');
+      setTimeout(() => setSuccessMessage(''), 5000);
+
     } catch (error) {
       console.error('Error creating material:', error);
       setErrors([error instanceof Error ? error.message : 'Error al crear el material']);
@@ -212,12 +298,24 @@ export default function LaserConfigurationPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Error al actualizar el material');
+        let errorMessage = 'Error al actualizar el material';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (jsonError) {
+          console.error('Error parsing update material error response:', jsonError);
+        }
+        throw new Error(errorMessage);
       }
 
       setIsEditDialogOpen(false);
       setEditingMaterial(null);
       await loadConfiguration();
+
+      // Mostrar notificación de éxito
+      setSuccessMessage('✅ Material actualizado exitosamente');
+      setTimeout(() => setSuccessMessage(''), 5000);
+
     } catch (error) {
       console.error('Error updating material:', error);
       setErrors([error instanceof Error ? error.message : 'Error al actualizar el material']);
@@ -233,10 +331,22 @@ export default function LaserConfigurationPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Error al eliminar el material');
+        let errorMessage = 'Error al eliminar el material';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (jsonError) {
+          console.error('Error parsing delete material error response:', jsonError);
+        }
+        throw new Error(errorMessage);
       }
 
       await loadConfiguration();
+
+      // Mostrar notificación de éxito
+      setSuccessMessage('✅ Material eliminado exitosamente');
+      setTimeout(() => setSuccessMessage(''), 5000);
+
     } catch (error) {
       console.error('Error deleting material:', error);
       setErrors([error instanceof Error ? error.message : 'Error al eliminar el material']);
@@ -275,18 +385,6 @@ export default function LaserConfigurationPage() {
           <h1 className="text-3xl font-bold text-white">Configuración de Corte Láser</h1>
           <p className="text-white/80 mt-2">Ajusta precios y configuraciones para las cotizaciones</p>
         </div>
-        <Button
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-green-600 hover:bg-green-700 text-white"
-        >
-          {saving ? (
-            <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-          ) : (
-            <Save className="h-4 w-4 mr-2" />
-          )}
-          {saving ? 'Guardando...' : 'Guardar Cambios'}
-        </Button>
       </div>
 
       {/* Configuración General */}
@@ -323,6 +421,20 @@ export default function LaserConfigurationPage() {
               />
               <p className="text-xs text-muted-foreground">Utilidad actual: {(config.profit_margin * 100).toFixed(2)}%</p>
             </div>
+          </div>
+          <div className="flex justify-end pt-4">
+            <Button
+              onClick={handleSaveConfig}
+              disabled={saving}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {saving ? (
+                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4 mr-2" />
+              )}
+              {saving ? 'Guardando...' : 'Guardar Configuración'}
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -601,22 +713,56 @@ export default function LaserConfigurationPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Mensaje de éxito */}
+      {successMessage && (
+        <Card className="border-green-500 bg-green-50 dark:bg-green-950/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 text-green-700 dark:text-green-400">
+              <div className="h-5 w-5 rounded-full bg-green-500 flex items-center justify-center">
+                <span className="text-white text-xs">✓</span>
+              </div>
+              <span className="font-semibold">{successMessage}</span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Errores */}
       {errors.length > 0 && (
-        <Card className="border-destructive">
+        <Card className="border-destructive bg-destructive/5">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="h-4 w-4" />
-              <span className="font-medium">Errores:</span>
+              <AlertCircle className="h-5 w-5" />
+              <span className="font-semibold text-lg">Errores:</span>
             </div>
-            <ul className="mt-2 text-sm text-destructive">
+            <ul className="mt-3 text-sm text-destructive space-y-1">
               {errors.map((error, index) => (
-                <li key={index}>• {error}</li>
+                <li key={index} className="flex items-start gap-2">
+                  <span className="text-destructive font-bold">•</span>
+                  <span>{error}</span>
+                </li>
               ))}
             </ul>
           </CardContent>
         </Card>
       )}
+
+      {/* Botón de guardar materiales */}
+      <div className="flex justify-center mt-8">
+        <Button
+          onClick={handleSaveMaterials}
+          disabled={saving}
+          size="lg"
+          className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg font-semibold"
+        >
+          {saving ? (
+            <RefreshCw className="h-5 w-5 mr-3 animate-spin" />
+          ) : (
+            <Save className="h-5 w-5 mr-3" />
+          )}
+          {saving ? 'Guardando...' : 'Guardar Precios de Materiales'}
+        </Button>
+      </div>
     </div>
   );
 }

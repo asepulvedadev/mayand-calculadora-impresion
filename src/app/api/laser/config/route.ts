@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { updateSetting, getSetting } from '@/lib/laserApi';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,10 +20,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Implementar guardado en base de datos cuando esté disponible
-    // Por ahora, la configuración se maneja localmente en el cliente
+    // Guardar configuración en Supabase
+    await updateSetting('cutting_rate_per_minute', cutting_rate_per_minute);
+    await updateSetting('profit_margin', profit_margin);
+
     const data = {
-      id: 1,
       cutting_rate_per_minute,
       profit_margin,
       updated_at: new Date().toISOString(),
@@ -45,12 +47,13 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    // TODO: Obtener configuración de base de datos cuando esté disponible
-    // Por ahora, devolver valores por defecto
+    // Obtener configuración de Supabase
+    const cutting_rate_per_minute = await getSetting('cutting_rate_per_minute');
+    const profit_margin = await getSetting('profit_margin');
+
     const config = {
-      id: 1,
-      cutting_rate_per_minute: 8,
-      profit_margin: 0.50,
+      cutting_rate_per_minute,
+      profit_margin,
       updated_at: new Date().toISOString(),
     };
 

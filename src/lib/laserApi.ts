@@ -139,8 +139,14 @@ export async function getSetting(key: string): Promise<number> {
     .eq('key', key)
     .single();
 
-  if (error) throw error;
-  return data?.value || 0;
+  if (error) {
+    // Si no existe la configuración, devolver valor por defecto
+    if (error.code === 'PGRST116') {
+      return key === 'cutting_rate_per_minute' ? 8 : 0.5;
+    }
+    throw error;
+  }
+  return data?.value || (key === 'cutting_rate_per_minute' ? 8 : 0.5);
 }
 
 export async function updateSetting(key: string, value: number): Promise<void> {
@@ -150,6 +156,8 @@ export async function updateSetting(key: string, value: number): Promise<void> {
       key,
       value,
       updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'key'
     });
 
   if (error) throw error;
