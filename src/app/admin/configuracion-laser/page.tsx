@@ -104,7 +104,8 @@ export default function LaserConfigurationPage() {
       });
 
       if (!generalConfigResponse.ok) {
-        throw new Error('Error al guardar configuración general');
+        const errorData = await generalConfigResponse.json();
+        throw new Error(errorData.error || 'Error al guardar configuración general');
       }
 
       // Guardar precios de materiales
