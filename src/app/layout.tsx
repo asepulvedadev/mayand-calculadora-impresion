@@ -4,8 +4,8 @@ import "./globals.css";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import PWA from "@/components/PWA";
 import { Toaster } from "sonner";
-import { SupabaseTest } from "@/components/SupabaseTest";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { ClientLayout } from "@/components/ClientLayout";
+
 // Import for testing (only in development)
 if (process.env.NODE_ENV === 'development') {
   import("@/lib/testSupabase");
@@ -48,9 +48,7 @@ export default function RootLayout({
       >
         <PWA />
         <ErrorBoundary>
-          <DashboardLayout>
-            {children}
-          </DashboardLayout>
+          <ClientLayout>{children}</ClientLayout>
         </ErrorBoundary>
         <Toaster />
       </body>
