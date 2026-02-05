@@ -28,7 +28,7 @@ export const laserCalculatorSchema = z.object({
   cutting_minutes: z.number().min(0.01, 'Los minutos de corte deben ser mayores a 0'),
   requires_assembly: z.boolean(),
   assembly_cost_per_piece: z.number().min(0, 'El costo de ensamblaje no puede ser negativo').optional(),
-}).refine((data) => {
+}).refine((_data) => {
   // Validación adicional: verificar que las dimensiones no excedan las del material seleccionado
   // Esta validación se haría en el componente usando la información del material
   return true; // Por ahora, siempre pasa - se valida en el componente

@@ -97,7 +97,7 @@ export function PortfolioSection() {
 
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-1">
-        {filteredProjects.map((project, index) => (
+        {filteredProjects.map((project) => (
           <div
             key={project.id}
             className={`${project.size} ${project.height} group relative overflow-hidden bg-white/5 border border-white/10 min-h-[400px]`}
