@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Calculator, Ruler, Sparkles } from 'lucide-react';
 import { usePrintCalculatorStore } from '@/lib/stores/printCalculatorStore';
-import { Material } from '@/types';
+import { PrintCalculatorInput } from '@/lib/validations/calculator';
 
 export function DimensionCalculator() {
   const {
@@ -19,7 +19,7 @@ export function DimensionCalculator() {
   } = usePrintCalculatorStore();
 
   // Get max width based on material
-  const getMaxWidth = (material: Material): number => {
+  const getMaxWidth = (material: PrintCalculatorInput['material']): number => {
     return material === 'lona' ? 180 : 150;
   };
 
@@ -48,7 +48,7 @@ export function DimensionCalculator() {
     }
   };
 
-  const handleMaterialChange = (selectedMaterial: Material) => {
+  const handleMaterialChange = (selectedMaterial: PrintCalculatorInput['material']) => {
     setMaterial(selectedMaterial);
 
     // Re-validate width if it exceeds the new material's limit

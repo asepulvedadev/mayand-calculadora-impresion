@@ -65,7 +65,12 @@ CREATE TABLE IF NOT EXISTS catalog_categories (
   sort_order INTEGER DEFAULT 0,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  
+  -- Nuevos campos para categorías tipadas
+  category_type TEXT DEFAULT 'general' CHECK (category_type IN ('corte_laser', 'impresion', 'neon', 'senaletica', 'exhibidores', 'empaque', 'decoracion', 'industrial', 'general')),
+  color TEXT DEFAULT '#458FFF',
+  image_url TEXT
 );
 
 -- Materiales disponibles para productos
@@ -88,8 +93,13 @@ CREATE TABLE IF NOT EXISTS catalog_products (
   material_id UUID REFERENCES catalog_materials(id) ON DELETE SET NULL,
   dimensions TEXT NOT NULL,
   thickness TEXT,
-  price DECIMAL(10,2) NOT NULL,
+  
+  -- Precios
+  price DECIMAL(10,2) NOT NULL, -- Precio base (menudeo)
+  price_wholesale DECIMAL(10,2), -- Precio de mayoreo
   price_unit TEXT DEFAULT '',
+  wholesale_min_quantity INTEGER DEFAULT 1, -- Cantidad mínima para precio de mayoreo
+  
   image_url TEXT,
   badge TEXT,
   badge_color TEXT DEFAULT '#458FFF',
@@ -118,6 +128,25 @@ CREATE TABLE IF NOT EXISTS catalog_product_features (
   feature_name TEXT NOT NULL,
   feature_value TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Tags para productos
+CREATE TABLE IF NOT EXISTS catalog_tags (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE,
+  color TEXT DEFAULT '#6B7280',
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Relación muchos a muchos entre productos y tags
+CREATE TABLE IF NOT EXISTS catalog_product_tags (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  product_id UUID REFERENCES catalog_products(id) ON DELETE CASCADE,
+  tag_id UUID REFERENCES catalog_tags(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(product_id, tag_id)
 );
 
 -- Carrito de compras
@@ -179,14 +208,29 @@ INSERT INTO laser_materials (name, thickness, sheet_width, sheet_height, usable_
   ('Cartón Corrugado', 4.00, 100.00, 140.00, 98.00, 138.00, 45.00, 'Marrón', 'Mate', true)
 ON CONFLICT DO NOTHING;
 
--- Insertar categorías del catálogo
-INSERT INTO catalog_categories (name, slug, description, icon, sort_order) VALUES
-  ('Corte Láser', 'corte-laser', 'Productos cortados con precisión láser', 'precision_manufacturing', 1),
-  ('Impresión UV', 'impresion', 'Impresión de alta calidad UV', 'print', 2),
-  ('Letreros Neón', 'neon', 'Letreros con iluminación LED', 'lightbulb', 3),
-  ('Señalética', 'senaletica', 'Señalamientos y señalización', 'branding_watermark', 4),
-  ('Exhibidores', 'exhibidores', 'Displays y exhibidores publicitarios', 'layers', 5)
-ON CONFLICT DO NOTHING;
+-- Insertar categorías del catálogo con tipos
+INSERT INTO catalog_categories (name, slug, description, icon, sort_order, category_type, color) VALUES
+  ('Corte Láser', 'corte-laser', 'Productos cortados con precisión láser', 'precision_manufacturing', 1, 'corte_laser', '#458FFF'),
+  ('Impresión UV', 'impresion', 'Impresión de alta calidad UV', 'print', 2, 'impresion', '#10B981'),
+  ('Letreros Neón', 'neon', 'Letreros con iluminación LED', 'lightbulb', 3, 'neon', '#F59E0B'),
+  ('Señalética', 'senaletica', 'Señalamientos y señalización', 'branding_watermark', 4, 'senaletica', '#EF4444'),
+  ('Exhibidores', 'exhibidores', 'Displays y exhibidores publicitarios', 'layers', 5, 'exhibidores', '#8B5CF6'),
+  ('Empaque', 'empaque', 'Cajas y empaques personalizados', 'inventory_2', 6, 'empaque', '#EC4899'),
+  ('Decoración', 'decoracion', 'Productos decorativos', 'home', 7, 'decoracion', '#14B8A6'),
+  ('Industrial', 'industrial', 'Productos para uso industrial', 'factory', 8, 'industrial', '#6B7280')
+ON CONFLICT (slug) DO NOTHING;
+
+-- Insertar tags de ejemplo
+INSERT INTO catalog_tags (name, slug, color) VALUES
+  ('Nuevo', 'nuevo', '#10B981'),
+  ('Oferta', 'oferta', '#EF4444'),
+  ('Popular', 'popular', '#F59E0B'),
+  ('Personalizable', 'personalizable', '#8B5CF6'),
+  ('Eco-friendly', 'eco-friendly', '#14B8A6'),
+  ('Premium', 'premium', '#FBBF24'),
+  ('Stock', 'stock', '#3B82F6'),
+  ('Sobre pedido', 'sobre-pedido', '#6B7280')
+ON CONFLICT (slug) DO NOTHING;
 
 -- Insertar materiales del catálogo
 INSERT INTO catalog_materials (name, slug, description) VALUES
@@ -368,6 +412,9 @@ CREATE INDEX IF NOT EXISTS idx_catalog_materials_active ON catalog_materials(is_
 CREATE INDEX IF NOT EXISTS idx_catalog_products_active ON catalog_products(is_active) WHERE is_active = true;
 CREATE INDEX IF NOT EXISTS idx_catalog_products_category ON catalog_products(category_id);
 CREATE INDEX IF NOT EXISTS idx_catalog_products_featured ON catalog_products(is_featured) WHERE is_featured = true;
+CREATE INDEX IF NOT EXISTS idx_catalog_product_tags_product ON catalog_product_tags(product_id);
+CREATE INDEX IF NOT EXISTS idx_catalog_product_tags_tag ON catalog_product_tags(tag_id);
+CREATE INDEX IF NOT EXISTS idx_catalog_tags_active ON catalog_tags(is_active) WHERE is_active = true;
 CREATE INDEX IF NOT EXISTS idx_catalog_cart_session ON catalog_cart(session_id);
 CREATE INDEX IF NOT EXISTS idx_catalog_orders_status ON catalog_orders(status);
 CREATE INDEX IF NOT EXISTS idx_catalog_orders_created ON catalog_orders(created_at DESC);
@@ -412,6 +459,12 @@ CREATE POLICY "Permitir acceso público a imágenes" ON catalog_product_images F
 
 DROP POLICY IF EXISTS "Permitir acceso público a características" ON catalog_product_features;
 CREATE POLICY "Permitir acceso público a características" ON catalog_product_features FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Permitir acceso público a tags" ON catalog_tags;
+CREATE POLICY "Permitir acceso público a tags" ON catalog_tags FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Permitir acceso público a relación producto-tags" ON catalog_product_tags;
+CREATE POLICY "Permitir acceso público a relación producto-tags" ON catalog_product_tags FOR ALL USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Permitir acceso público a carrito" ON catalog_cart;
 CREATE POLICY "Permitir acceso público a carrito" ON catalog_cart FOR ALL USING (true) WITH CHECK (true);

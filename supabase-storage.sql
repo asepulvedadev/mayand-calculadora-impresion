@@ -23,14 +23,38 @@ VALUES ('product-images', 'product-images', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
 -- ============================================
--- 2. POLÍTICAS RLS - Acceso público de lectura
+-- 2. POLÍTICAS RLS - Acceso público completo
 -- ============================================
 
+-- Eliminar políticas existentes si hay conflictos
+DROP POLICY IF EXISTS "Permitir acceso público a product-images" ON storage.objects;
+DROP POLICY IF EXISTS "Permitir insertar product-images" ON storage.objects;
+DROP POLICY IF EXISTS "Permitir actualizar product-images" ON storage.objects;
+DROP POLICY IF EXISTS "Permitir eliminar product-images" ON storage.objects;
+
 -- Política: Permitir acceso público para leer imágenes
--- Esta política permite que cualquier persona vea las imágenes
 CREATE POLICY "Permitir acceso público a product-images"
 ON storage.objects
 FOR SELECT
+USING ( bucket_id = 'product-images' );
+
+-- Política: Permitir inserción de imágenes (cualquier usuario puede subir)
+CREATE POLICY "Permitir insertar product-images"
+ON storage.objects
+FOR INSERT
+WITH CHECK ( bucket_id = 'product-images' );
+
+-- Política: Permitir actualización de imágenes
+CREATE POLICY "Permitir actualizar product-images"
+ON storage.objects
+FOR UPDATE
+USING ( bucket_id = 'product-images' )
+WITH CHECK ( bucket_id = 'product-images' );
+
+-- Política: Permitir eliminación de imágenes
+CREATE POLICY "Permitir eliminar product-images"
+ON storage.objects
+FOR DELETE
 USING ( bucket_id = 'product-images' );
 
 -- ============================================

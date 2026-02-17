@@ -16,7 +16,9 @@ interface Product {
   dimensions: string
   thickness: string
   price: number
+  price_wholesale?: number
   price_unit: string
+  wholesale_min_quantity?: number
   image_url: string
   badge: string
   badge_color: string
@@ -25,6 +27,8 @@ interface Product {
   is_featured: boolean
   created_at: string
   category?: { name: string }
+  images?: { id: string; url: string }[]
+  tags?: { id: string; name: string; slug: string; color?: string }[]
 }
 
 export default function CatalogoAdminPage() {

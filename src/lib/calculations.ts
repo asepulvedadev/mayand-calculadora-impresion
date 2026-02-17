@@ -1,12 +1,12 @@
-import { Material, QuoteData } from '@/types';
+import { PrintMaterial, QuoteData } from '@/types';
 
-const PRICES = {
+const PRICES: Record<PrintMaterial, { normal: number; promotion: number }> = {
   vinil: { normal: 150, promotion: 120 }, // 150cm width, MXN/linear meter
   lona: { normal: 135, promotion: 120 }, // 180cm width, MXN/linear meter
   vinil_transparente: { normal: 180, promotion: 160 } // 150cm width, MXN/linear meter
 };
 
-export const calculateQuote = (width: number, height: number, material: Material, isPromotion: boolean = false): QuoteData => {
+export const calculateQuote = (width: number, height: number, material: PrintMaterial, isPromotion: boolean = false): QuoteData => {
   // All materials calculate by linear meters (height)
   const area = height / 100; // linear meters
   const unitPrice = isPromotion ? PRICES[material].promotion : PRICES[material].normal;

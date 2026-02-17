@@ -23,7 +23,9 @@ interface Product {
   dimensions: string
   thickness: string
   price: number
+  price_wholesale?: number
   price_unit: string
+  wholesale_min_quantity?: number
   image_url: string
   badge: string
   badge_color: string
@@ -282,6 +284,16 @@ export default function CatalogoPage() {
                         </span>
                         {product.price_unit && (
                           <span className="text-white/50 text-sm">{product.price_unit}</span>
+                        )}
+                        {product.price_wholesale && (
+                          <div className="mt-1">
+                            <span className="text-lg font-bold text-green-400">
+                              ${product.price_wholesale.toLocaleString()}
+                            </span>
+                            <span className="text-white/40 text-xs ml-1">
+                              x{product.wholesale_min_quantity || 10}+ pzs
+                            </span>
+                          </div>
                         )}
                       </div>
                       <button className="bg-[#458FFF] hover:bg-[#458FFF]/90 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">

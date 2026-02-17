@@ -1,22 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import { CategoryType } from '@/types'
 
-// GET - Obtener todas las categorías
+// GET - Obtener todos los tags
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const type = searchParams.get('type') as CategoryType | null
     const active = searchParams.get('active')
 
     let query = supabase
-      .from('catalog_categories')
-      .select('id, name, slug, icon, sort_order')
-      .order('sort_order')
+      .from('catalog_tags')
+      .select('*')
+      .order('name')
 
-    if (type) {
-      query = query.eq('category_type', type)
-    }
     if (active === 'true') {
       query = query.eq('is_active', true)
     }
@@ -27,7 +22,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ categories: data })
+    return NextResponse.json({ tags: data })
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Error desconocido' },
@@ -36,7 +31,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Crear categoría
+// POST - Crear tag
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -50,7 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { data, error } = await supabase
-      .from('catalog_categories')
+      .from('catalog_tags')
       .insert(body)
       .select()
       .single()
@@ -59,7 +54,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ category: data }, { status: 201 })
+    return NextResponse.json({ tag: data }, { status: 201 })
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Error desconocido' },
