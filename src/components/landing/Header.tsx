@@ -55,7 +55,7 @@ export function Header() {
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         aria-label="Toggle menu"
       >
-        {isMenuOpen ? <Close size={24} /> : <Menu size={24} />}
+        {isMenuOpen ? <Close sx={{ fontSize: 24 }} /> : <Menu sx={{ fontSize: 24 }} />}
       </button>
       
       {/* Mobile Navigation */}
