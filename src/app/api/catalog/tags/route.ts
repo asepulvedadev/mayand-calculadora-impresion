@@ -4,6 +4,12 @@ import { supabase } from '@/lib/supabase'
 // GET - Obtener todos los tags
 export async function GET(request: NextRequest) {
   try {
+    // Verificar que Supabase esté configurado
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.error('Supabase no configurado')
+      return NextResponse.json({ error: 'Configuración de base de datos incompleta' }, { status: 500 })
+    }
+
     const { searchParams } = new URL(request.url)
     const active = searchParams.get('active')
 
@@ -19,10 +25,11 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query
 
     if (error) {
+      console.error('Supabase error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ tags: data })
+    return NextResponse.json({ tags: data || [] })
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Error desconocido' },
