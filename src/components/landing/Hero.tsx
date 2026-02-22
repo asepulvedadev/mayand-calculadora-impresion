@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Printer, Scissors } from 'lucide-react';
+import { Print, ContentCut } from '@mui/icons-material';
 
 export function Hero() {
   return (
@@ -52,14 +52,14 @@ export function Hero() {
                 href="/admin/calculadora"
                 className="flex min-w-[220px] cursor-pointer items-center justify-center rounded-xl h-14 px-10 bg-[#458FFF] text-white text-lg font-bold transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(69,143,255,0.5)] active:scale-95"
               >
-                <Printer className="w-5 h-5 mr-2" />
+                <Print className="w-5 h-5 mr-2" />
                 Cotizar Impresión
               </Link>
               <Link 
                 href="/admin/corte-laser"
                 className="flex min-w-[220px] cursor-pointer items-center justify-center rounded-xl h-14 px-10 bg-white/5 text-white text-lg font-bold border border-white/20 backdrop-blur-md transition-all hover:bg-white/10"
               >
-                <Scissors className="w-5 h-5 mr-2" />
+                <ContentCut className="w-5 h-5 mr-2" />
                 Cotizar Corte Láser
               </Link>
             </div>
@@ -68,7 +68,7 @@ export function Hero() {
           {/* Technology badge */}
           <div className="absolute bottom-12 right-12 hidden xl:flex items-center gap-5 bg-[#1a1d2e]/80 backdrop-blur-2xl p-6 rounded-2xl border border-white/10 shadow-2xl">
             <div className="flex items-center justify-center size-12 rounded-full bg-[#458FFF]/20 text-[#458FFF]">
-              <Printer className="w-6 h-6" />
+              <Print className="w-6 h-6" />
             </div>
             <div>
               <p className="text-white font-black text-lg leading-none mb-1">Hasta 160cm</p>

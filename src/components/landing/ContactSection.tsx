@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { Email, Phone, LocationOn, AccessTime, Send } from '@mui/icons-material';
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -41,19 +41,19 @@ export function ContactSection() {
       href: `https://wa.me/${whatsappNumber}`
     },
     {
-      icon: Mail,
+      icon: Email,
       title: 'Email',
       value: `ventas@${domain}`,
       href: `mailto:ventas@${domain}`
     },
     {
-      icon: MapPin,
+      icon: LocationOn,
       title: 'Dirección',
       value: 'Av. Principal 123, Ciudad de México',
       href: '#'
     },
     {
-      icon: Clock,
+      icon: AccessTime,
       title: 'Horario',
       value: 'Lun - Vie: 9am - 6pm',
       href: '#'

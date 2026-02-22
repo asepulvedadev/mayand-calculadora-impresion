@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { X, Upload, Save, Loader2, Plus, Trash2 } from 'lucide-react'
+import { X, CloudUpload, Save, Plus, Trash2 } from 'lucide-react'
+import { CircularProgress } from '@mui/material'
+import { Close, Add, Delete } from '@mui/icons-material'
 import { uploadProductImage, getProductImageUrl } from '@/lib/storage'
 import { CategoryType } from '@/types'
 
@@ -350,12 +352,12 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
                     onClick={() => removeImage(index)}
                     className="absolute top-2 right-2 p-1 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                   >
-                    <Trash2 size={16} className="text-white" />
+                    <Trash2 fontSize="small" className="text-white" />
                   </button>
                 </>
               ) : (
                 <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
-                  <Upload size={24} className="text-gray-500 mb-2" />
+                  <CloudUpload fontSize="large" className="text-gray-500 mb-2" />
                   <span className="text-xs text-gray-500">Foto {index + 1}</span>
                   <input
                     ref={(el) => { fileInputRefs.current[index] = el }}
@@ -376,7 +378,7 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
               onClick={addImageSlot}
               className="aspect-square bg-gray-800 rounded-lg border-2 border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-blue-500 transition-colors"
             >
-              <Plus size={24} className="text-gray-500 mb-2" />
+              <Plus fontSize="large" className="text-gray-500 mb-2" />
               <span className="text-xs text-gray-500">Agregar</span>
             </button>
           )}
@@ -427,7 +429,7 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
             onClick={() => setShowNewCategory(!showNewCategory)}
             className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1"
           >
-            <Plus size={14} /> Nueva categoría
+            <Plus fontSize="small" /> Nueva categoría
           </button>
         </div>
         
@@ -701,7 +703,7 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
           disabled={loading || uploading}
           className="flex items-center gap-2 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {(loading || uploading) && <Loader2 size={18} className="animate-spin" />}
+          {(loading || uploading) && <CircularProgress size={24} className="animate-spin" />}
           <Save size={18} />
           {product?.id ? 'Actualizar' : 'Crear'} producto
         </button>

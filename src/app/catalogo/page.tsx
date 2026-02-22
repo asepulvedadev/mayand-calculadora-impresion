@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, Filter, ChevronLeft, ChevronRight, ShoppingCart, ArrowLeft, Loader2 } from 'lucide-react'
+import { Search, ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react'
+import { CircularProgress } from '@mui/material'
+import { FilterList, ArrowBack } from '@mui/icons-material'
 import { getProductImageUrl } from '@/lib/storage'
 
 interface Category {
@@ -96,7 +98,7 @@ export default function CatalogoPage() {
       <header className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-[#0a0821]">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3 text-[#458FFF]">
-            <ArrowLeft size={24} />
+            <ArrowBack fontSize="large" />
             <span className="text-white font-semibold">Volver</span>
           </Link>
           <div className="flex items-center gap-3">
@@ -210,7 +212,7 @@ export default function CatalogoPage() {
           <div className="max-w-7xl mx-auto mb-10">
             <div className="flex items-center gap-2 text-white/50 text-sm mb-4">
               <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-              <ChevronRight size={16} />
+              <ChevronRight style={{ fontSize: 16 }} />
               <span className="text-[#FFD700] font-medium">Catálogo de Productos</span>
             </div>
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -224,7 +226,7 @@ export default function CatalogoPage() {
               </div>
               <div className="flex items-center gap-3">
                 <button className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-sm font-semibold text-white hover:bg-white/20 transition-colors">
-                  <Filter size={18} />
+                  <FilterList fontSize="small" />
                   Filtrar
                 </button>
               </div>
@@ -234,7 +236,7 @@ export default function CatalogoPage() {
           {/* Loading */}
           {loading && (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="animate-spin text-[#458FFF]" size={48} />
+              <CircularProgress className="animate-spin text-[#458FFF]" sx={{ fontSize: 48 }} />
             </div>
           )}
 
@@ -327,7 +329,7 @@ export default function CatalogoPage() {
           {!loading && filteredProducts.length > 0 && (
             <div className="max-w-7xl mx-auto mt-16 flex items-center justify-center gap-2">
               <button className="p-2 rounded-lg bg-white/10 border border-white/20 text-white/50 hover:text-white hover:bg-white/20 transition-colors">
-                <ChevronLeft size={20} />
+                <ChevronLeft style={{ fontSize: 20 }} />
               </button>
               <button className="w-10 h-10 rounded-lg bg-[#458FFF] text-white font-bold text-sm">1</button>
               <button className="w-10 h-10 rounded-lg bg-white/10 border border-white/20 text-white/70 hover:bg-white/20 font-bold text-sm transition-colors">2</button>

@@ -3,7 +3,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { DollarSign, Calculator, Sparkles, MessageCircle } from 'lucide-react';
+import { AttachMoney, Calculate, AutoAwesome, Chat } from '@mui/icons-material';
 import { usePrintCalculatorStore } from '@/lib/stores/printCalculatorStore';
 
 interface QuoteDisplayProps {
@@ -55,7 +55,7 @@ export function QuoteDisplay({ quote: propQuote }: QuoteDisplayProps) {
     return (
       <div className="w-full h-full flex items-center justify-center p-6">
         <div className="text-center">
-          <Calculator className="mx-auto h-16 w-16 text-muted-foreground mb-4 animate-pulse" />
+          <Calculate className="mx-auto h-16 w-16 text-muted-foreground mb-4 animate-pulse" />
           <p className="text-muted-foreground text-lg font-medium">Ingresa las dimensiones para ver la cotización</p>
           <p className="text-muted-foreground/70 text-sm mt-2">Los cálculos se actualizarán automáticamente</p>
         </div>
@@ -68,12 +68,12 @@ export function QuoteDisplay({ quote: propQuote }: QuoteDisplayProps) {
       <div className="mb-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold flex items-center gap-2">
-            <DollarSign className="h-4 w-4 text-primary" />
+            <AttachMoney className="h-4 w-4 text-primary" />
             Cotización
           </h2>
           {quote.isPromotion && (
             <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 shadow-md animate-pulse">
-              <Sparkles className="h-3 w-3 mr-1" />
+              <AutoAwesome className="h-3 w-3 mr-1" />
               Promoción
             </Badge>
           )}
@@ -129,7 +129,7 @@ export function QuoteDisplay({ quote: propQuote }: QuoteDisplayProps) {
             onClick={shareOnWhatsApp}
             className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-lg px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-accent/50 hover:border-accent"
           >
-            <MessageCircle className="h-4 w-4 mr-2" />
+            <Chat className="h-4 w-4 mr-2" />
             Compartir Cotización
           </Button>
         </div>

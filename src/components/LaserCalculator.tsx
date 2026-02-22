@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Calculator, AlertCircle } from 'lucide-react';
+import { Calculate, Error as ErrorIcon } from '@mui/icons-material';
 import { LaserMaterial, LaserQuoteInput, LaserQuote } from '@/types/laser';
 import { getActiveMaterials } from '@/lib/laserApi';
 import { validateLaserQuoteInput } from '@/lib/laserCalculations';
@@ -137,7 +137,7 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Calculator className="h-5 w-5" />
+            <Calculate className="h-5 w-5" />
             Calculadora de Corte Láser
           </CardTitle>
         </CardHeader>
@@ -268,7 +268,7 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
           {errors.length > 0 && (
             <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
               <div className="flex items-center gap-2 text-destructive">
-                <AlertCircle className="h-4 w-4" />
+                <ErrorIcon className="h-4 w-4" />
                 <span className="font-medium">Errores de validación:</span>
               </div>
               <ul className="mt-2 text-sm text-destructive">
@@ -280,7 +280,7 @@ export function LaserCalculator({ onQuoteGenerated }: LaserCalculatorProps) {
           )}
 
           <Button onClick={handleCalculate} className="w-full" size="lg">
-            <Calculator className="h-4 w-4 mr-2" />
+            <Calculate className="h-4 w-4 mr-2" />
             Calcular Cotización
           </Button>
         </CardContent>

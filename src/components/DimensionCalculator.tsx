@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Calculator, Ruler, Sparkles } from 'lucide-react';
+import { Calculate, Straighten, AutoAwesome } from '@mui/icons-material';
 import { usePrintCalculatorStore } from '@/lib/stores/printCalculatorStore';
 import { PrintCalculatorInput } from '@/lib/validations/calculator';
 
@@ -66,7 +66,7 @@ export function DimensionCalculator() {
     <Card className="w-full glassmorphism fade-in hover-lift">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm flex items-center gap-2">
-          <Calculator className="h-4 w-4 text-primary" />
+          <Calculate className="h-4 w-4 text-primary" />
           Calculadora de Dimensiones
         </CardTitle>
       </CardHeader>
@@ -153,7 +153,7 @@ export function DimensionCalculator() {
         <div className="space-y-1">
           <div className="flex items-center justify-between bg-gradient-to-r from-accent/10 to-accent/5 p-3 rounded-md border-2 border-accent/30 shadow-sm">
             <div className="flex items-center gap-2">
-              <Sparkles className={`h-4 w-4 ${formData.isPromotion ? 'text-accent' : 'text-muted-foreground'}`} />
+              <AutoAwesome className={`h-4 w-4 ${formData.isPromotion ? 'text-accent' : 'text-muted-foreground'}`} />
               <Label htmlFor="promotion" className="text-sm font-semibold cursor-pointer">
                 Precio Promocional
               </Label>
@@ -173,7 +173,7 @@ export function DimensionCalculator() {
         </div>
 
         <div className="text-xs text-muted-foreground bg-muted/50 p-1 rounded-md border-2 border-border/80 shadow-sm">
-            <Ruler className="inline h-3 w-3 mr-1" />
+            <Straighten className="inline h-3 w-3 mr-1" />
             Metros lineales: {(formData.height / 100).toFixed(2)} m
           </div>
       </CardContent>

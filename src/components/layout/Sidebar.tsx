@@ -4,16 +4,16 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { Calculator, Scissors, Home, Menu, X, ChevronLeft, ChevronRight, Settings, Folder } from 'lucide-react';
+import { Calculate, ContentCut, Home, Menu, Close, ChevronLeft, ChevronRight, Settings, Folder } from '@mui/icons-material';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: Home },
   { name: 'Catálogo', href: '/admin/catalogo', icon: Folder },
-  { name: 'Impresión', href: '/admin/calculadora', icon: Calculator },
-  { name: 'Corte Láser', href: '/admin/corte-laser', icon: Scissors },
+  { name: 'Impresión', href: '/admin/calculadora', icon: Calculate },
+  { name: 'Corte Láser', href: '/admin/corte-laser', icon: ContentCut },
   { name: 'Configuración Láser', href: '/admin/configuracion-laser', icon: Settings },
-  { name: 'Materiales', href: '/admin/materiales', icon: Calculator },
+  { name: 'Materiales', href: '/admin/materiales', icon: Calculate },
 ];
 
 export function Sidebar() {
@@ -31,7 +31,7 @@ export function Sidebar() {
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 rounded-md bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-colors"
           >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isOpen ? <Close className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       )}

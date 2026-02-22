@@ -3,7 +3,7 @@
 import React from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { Warning, Refresh } from '@mui/icons-material';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -43,7 +43,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       return (
         <div className="min-h-screen flex items-center justify-center p-4">
           <Alert className="max-w-md">
-            <AlertTriangle className="h-4 w-4" />
+            <Warning className="h-4 w-4" />
             <AlertTitle>Algo salió mal</AlertTitle>
             <AlertDescription className="mt-2">
               Ha ocurrido un error inesperado. Por favor, intenta recargar la página.
@@ -53,7 +53,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
               className="mt-4"
               variant="outline"
             >
-              <RefreshCw className="mr-2 h-4 w-4" />
+              <Refresh className="mr-2 h-4 w-4" />
               Intentar de nuevo
             </Button>
           </Alert>

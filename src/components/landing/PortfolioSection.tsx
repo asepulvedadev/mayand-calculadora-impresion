@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Eye } from 'lucide-react';
+import { Visibility } from '@mui/icons-material';
 
 const categories = ['Todo', 'Corte Láser', 'Lonas y Vinilos', 'Proyectos Especiales'];
 
@@ -128,7 +128,7 @@ export function PortfolioSection() {
                   {project.description}
                 </p>
                 <button className="flex items-center gap-2 text-[#FFD700] mt-4 text-sm font-semibold uppercase tracking-wider hover:text-white transition-colors">
-                  <Eye className="w-4 h-4" />
+                  <Visibility className="w-4 h-4" />
                   Ver Proyecto
                 </button>
               </div>

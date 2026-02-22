@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Edit, Trash2, Settings } from 'lucide-react';
+import { Add, Edit, Delete, Settings } from '@mui/icons-material';
 import { LaserMaterial } from '@/types/laser';
 import { getAllMaterials, createMaterial, updateMaterial, deleteMaterial } from '@/lib/laserApi';
 import { toast } from 'sonner';
@@ -147,7 +147,7 @@ export default function AdminMaterialsPage() {
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button onClick={resetForm}>
-                <Plus className="h-4 w-4 mr-2" />
+                <Add className="h-4 w-4 mr-2" />
                 Nuevo Material
               </Button>
             </DialogTrigger>
@@ -338,7 +338,7 @@ export default function AdminMaterialsPage() {
                           size="sm"
                           onClick={() => handleDelete(material.id)}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Delete className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Plus, Edit, Trash2, Search, Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Add, Edit, Delete, Search, Visibility, VisibilityOff } from '@mui/icons-material'
+import { CircularProgress } from '@mui/material'
 import { getProductImageUrl } from '@/lib/storage'
 import ProductForm from '@/components/admin/ProductForm'
 
@@ -142,7 +143,7 @@ export default function CatalogoAdminPage() {
           <div className="relative">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              size={18}
+              fontSize="small"
             />
             <input
               type="text"
@@ -159,7 +160,7 @@ export default function CatalogoAdminPage() {
             }}
             className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
           >
-            <Plus size={18} />
+            <Add style={{ fontSize: 18 }} />
             Nuevo producto
           </button>
         </div>
@@ -168,7 +169,7 @@ export default function CatalogoAdminPage() {
       {/* Tabla de productos */}
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="animate-spin text-blue-500" size={32} />
+          <CircularProgress style={{ fontSize: 24 }} className="animate-spin text-blue-500" />
         </div>
       ) : (
         <div className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden">
@@ -254,7 +255,7 @@ export default function CatalogoAdminPage() {
                         className="p-2 text-gray-400 hover:text-white transition-colors"
                         title={product.is_active ? 'Desactivar' : 'Activar'}
                       >
-                        {product.is_active ? <Eye size={18} /> : <EyeOff size={18} />}
+                        {product.is_active ? <Visibility fontSize="small" /> : <VisibilityOff fontSize="small" />}
                       </button>
                       <button
                         onClick={() => {
@@ -264,7 +265,7 @@ export default function CatalogoAdminPage() {
                         className="p-2 text-gray-400 hover:text-blue-400 transition-colors"
                         title="Editar"
                       >
-                        <Edit size={18} />
+                        <Edit style={{ fontSize: 18 }} />
                       </button>
                       <button
                         onClick={() => handleDelete(product.id)}
@@ -273,9 +274,9 @@ export default function CatalogoAdminPage() {
                         title="Eliminar"
                       >
                         {deletingId === product.id ? (
-                          <Loader2 size={18} className="animate-spin" />
+                          <CircularProgress size={18} className="animate-spin" />
                         ) : (
-                          <Trash2 size={18} />
+                          <Delete style={{ fontSize: 18 }} />
                         )}
                       </button>
                     </div>

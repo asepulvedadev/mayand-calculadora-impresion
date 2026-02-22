@@ -5,7 +5,7 @@ import { LaserCalculator } from '@/components/LaserCalculator';
 import { createQuote } from '@/lib/laserApi';
 import { useLaserCalculatorStore } from '@/lib/stores/laserCalculatorStore';
 import { LaserQuote } from '@/types/laser';
-import { MessageCircle, FileText } from 'lucide-react';
+import { Chat, Description } from '@mui/icons-material';
 import { toast } from 'sonner';
 
 export default function CorteLaserPage() {
@@ -76,14 +76,14 @@ ${quote.assembly_cost > 0 ? `• Ensamblaje: $${quote.assembly_cost.toFixed(2)} 
               onClick={generatePDF}
               className="bg-white/10 hover:bg-white/20 text-white border-white/20 rounded-full px-4 py-2"
             >
-              <FileText className="h-4 w-4 mr-2" />
+              <Description className="h-4 w-4 mr-2" />
               PDF
             </Button>
             <Button
               onClick={shareOnWhatsApp}
               className="bg-green-600 hover:bg-green-700 text-white rounded-full px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <MessageCircle className="h-4 w-4 mr-2" />
+              <Chat className="h-4 w-4 mr-2" />
               Compartir
             </Button>
           </div>

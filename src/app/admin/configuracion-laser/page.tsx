@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Settings, Save, RefreshCw, AlertCircle, Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { Settings, Save, Refresh, Error as ErrorIcon, Add, Edit, Delete, Visibility } from '@mui/icons-material';
 import { LaserMaterial } from '@/types/laser';
 import { getActiveMaterials } from '@/lib/laserApi';
 
@@ -137,7 +137,7 @@ export default function LaserConfigurationPage() {
       });
 
       if (!generalConfigResponse.ok) {
-        let errorMessage = 'Error al guardar configuración general';
+        let errorMessage: string = 'Error al guardar configuración general';
         try {
           const errorData = await generalConfigResponse.json();
           errorMessage = errorData.error || errorMessage;
@@ -429,7 +429,7 @@ export default function LaserConfigurationPage() {
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
               {saving ? (
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                <Refresh className="h-4 w-4 mr-2 animate-spin" />
               ) : (
                 <Save className="h-4 w-4 mr-2" />
               )}
@@ -447,7 +447,7 @@ export default function LaserConfigurationPage() {
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="bg-green-600 hover:bg-green-700">
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Add className="h-4 w-4 mr-2" />
                   Nuevo Material
                 </Button>
               </DialogTrigger>
@@ -570,12 +570,12 @@ export default function LaserConfigurationPage() {
                   >
                     {saving ? (
                       <>
-                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        <Refresh className="h-4 w-4 mr-2 animate-spin" />
                         Creando...
                       </>
                     ) : (
                       <>
-                        <Plus className="h-4 w-4 mr-2" />
+                        <Add className="h-4 w-4 mr-2" />
                         Crear Material
                       </>
                     )}
@@ -629,7 +629,7 @@ export default function LaserConfigurationPage() {
                       onClick={() => handleDeleteMaterial(material.id)}
                       className="text-red-600 hover:text-red-700"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Delete className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -753,7 +753,7 @@ export default function LaserConfigurationPage() {
             >
               {saving ? (
                 <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  <Refresh className="h-4 w-4 mr-2 animate-spin" />
                   Guardando...
                 </>
               ) : (
@@ -786,7 +786,7 @@ export default function LaserConfigurationPage() {
         <Card className="border-destructive bg-destructive/5">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="h-5 w-5" />
+              <ErrorIcon className="h-5 w-5" />
               <span className="font-semibold text-lg">Errores:</span>
             </div>
             <ul className="mt-3 text-sm text-destructive space-y-1">
@@ -810,7 +810,7 @@ export default function LaserConfigurationPage() {
           className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg font-semibold"
         >
           {saving ? (
-            <RefreshCw className="h-5 w-5 mr-3 animate-spin" />
+            <Refresh className="h-5 w-5 mr-3 animate-spin" />
           ) : (
             <Save className="h-5 w-5 mr-3" />
           )}

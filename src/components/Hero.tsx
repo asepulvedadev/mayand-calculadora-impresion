@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Calculator } from 'lucide-react';
+import { Calculate } from '@mui/icons-material';
 import Image from 'next/image';
 
 export function Hero() {
@@ -54,7 +54,7 @@ export function Hero() {
                   size="lg"
                   className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
-                  <Calculator className="h-5 w-5 mr-2" />
+                  <Calculate className="h-5 w-5 mr-2" />
                   Cotización Impresión
                 </Button>
               </Link>

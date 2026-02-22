@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X } from 'lucide-react';
+import { Menu, Close } from '@mui/icons-material';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -55,7 +55,7 @@ export function Header() {
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         aria-label="Toggle menu"
       >
-        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        {isMenuOpen ? <Close size={24} /> : <Menu size={24} />}
       </button>
       
       {/* Mobile Navigation */}

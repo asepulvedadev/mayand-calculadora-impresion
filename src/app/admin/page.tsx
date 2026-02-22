@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { Calculator, Scissors, Settings, Package } from 'lucide-react';
+import { Calculate, ContentCut, Settings, Inventory } from '@mui/icons-material';
 
 export default function AdminDashboard() {
   const stats = [
-    { label: 'Cotizaciones Hoy', value: '12', icon: Calculator },
-    { label: 'Proyectos Activos', value: '5', icon: Scissors },
-    { label: 'Materiales', value: '24', icon: Package },
+    { label: 'Cotizaciones Hoy', value: '12', icon: Calculate },
+    { label: 'Proyectos Activos', value: '5', icon: ContentCut },
+    { label: 'Materiales', value: '24', icon: Inventory },
   ];
 
   const recentQuotes = [
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
           className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 transition-all"
         >
           <div className="p-3 bg-[#458FFF]/20 rounded-lg">
-            <Calculator className="w-6 h-6 text-[#458FFF]" />
+            <Calculate className="w-6 h-6 text-[#458FFF]" />
           </div>
           <div>
             <p className="text-white font-semibold">Nueva Cotización</p>
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
           className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 transition-all"
         >
           <div className="p-3 bg-[#FFD700]/20 rounded-lg">
-            <Scissors className="w-6 h-6 text-[#FFD700]" />
+            <ContentCut className="w-6 h-6 text-[#FFD700]" />
           </div>
           <div>
             <p className="text-white font-semibold">Corte Láser</p>
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
           className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 transition-all"
         >
           <div className="p-3 bg-green-500/20 rounded-lg">
-            <Package className="w-6 h-6 text-green-500" />
+            <Inventory className="w-6 h-6 text-green-500" />
           </div>
           <div>
             <p className="text-white font-semibold">Materiales</p>

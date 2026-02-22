@@ -1,18 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { Printer, Scissors, ArrowRight } from 'lucide-react';
+import { Print, ContentCut, ArrowForward } from '@mui/icons-material';
 
 const services = [
   {
-    icon: Printer,
+    icon: Print,
     title: 'Impresión Gran Formato',
     description: 'Impresión en vinil, lona y materiales especiales con máquinas de hasta 160cm de ancho y 360cm de largo. Tintas UV de alta resistencia y colores vibrantes.',
     href: '/calculadora',
     color: '#458FFF'
   },
   {
-    icon: Scissors,
+    icon: ContentCut,
     title: 'Corte Láser',
     description: 'Corte y grabado de precisión en acrílico, madera, MDF y metales para señalética y elementos arquitectónicos. Acabados profesionales garantizados.',
     href: '/corte-laser',
@@ -69,7 +69,7 @@ export function ServicesSection() {
             {/* Arrow */}
             <div className="flex items-center gap-2 text-[#FFD700] font-medium mt-4 group-hover:translate-x-2 transition-transform">
               <span>Ver precios y cotizar</span>
-              <ArrowRight className="w-5 h-5" />
+              <ArrowForward className="w-5 h-5" />
             </div>
           </Link>
         ))}
