@@ -125,9 +125,9 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
         fetch('/api/catalog/tags')
       ])
 
-      const catsData = await catsRes.json()
-      const matsData = await matsRes.json()
-      const tagsData = await tagsRes.json()
+      const catsData = catsRes.ok ? await catsRes.json() : { categories: [] }
+      const matsData = matsRes.ok ? await matsRes.json() : { materials: [] }
+      const tagsData = tagsRes.ok ? await tagsRes.json() : { tags: [] }
 
       setCategories(catsData.categories || [])
       setMaterials(matsData.materials || [])

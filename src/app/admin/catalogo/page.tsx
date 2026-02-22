@@ -44,7 +44,7 @@ export default function CatalogoAdminPage() {
   const fetchProducts = async () => {
     try {
       const res = await fetch('/api/catalog/products')
-      const data = await res.json()
+      const data = res.ok ? await res.json() : { products: [], error: 'Error al cargar productos' }
       if (data.products) {
         setProducts(data.products)
       }

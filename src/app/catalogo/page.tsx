@@ -56,8 +56,8 @@ export default function CatalogoPage() {
           fetch('/api/catalog/categories')
         ])
 
-        const productsData = await productsRes.json()
-        const categoriesData = await categoriesRes.json()
+        const productsData = productsRes.ok ? await productsRes.json() : { products: [] }
+        const categoriesData = categoriesRes.ok ? await categoriesRes.json() : { categories: [] }
 
         if (productsData.products) {
           setProducts(productsData.products)
