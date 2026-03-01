@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '*.googleusercontent.com',
       },
+      // Unsplash
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
       // Supabase Storage
       {
         protocol: 'https',

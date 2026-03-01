@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 import { CategoryType } from '@/types'
 
 // GET - Obtener todas las categorías
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await createClient()
     const { searchParams } = new URL(request.url)
     const type = searchParams.get('type') as CategoryType | null
     const active = searchParams.get('active')
@@ -39,6 +40,7 @@ export async function GET(request: NextRequest) {
 // POST - Crear categoría
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient()
     const body = await request.json()
 
     // Generar slug si no se proporciona

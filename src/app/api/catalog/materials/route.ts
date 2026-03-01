@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 
 // GET - Obtener todos los materiales
 export async function GET() {
   try {
+    const supabase = await createClient()
     const { data, error } = await supabase
       .from('catalog_materials')
       .select('*')
@@ -26,6 +27,7 @@ export async function GET() {
 // POST - Crear material
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient()
     const body = await request.json()
 
     const { data, error } = await supabase

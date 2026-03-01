@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 
 // GET - Obtener todos los tags
 export async function GET(request: NextRequest) {
   try {
-    // Verificar que Supabase esté configurado
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      console.error('Supabase no configurado')
-      return NextResponse.json({ error: 'Configuración de base de datos incompleta' }, { status: 500 })
-    }
-
+    const supabase = await createClient()
     const { searchParams } = new URL(request.url)
     const active = searchParams.get('active')
 
@@ -41,6 +36,7 @@ export async function GET(request: NextRequest) {
 // POST - Crear tag
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient()
     const body = await request.json()
 
     // Generar slug si no se proporciona

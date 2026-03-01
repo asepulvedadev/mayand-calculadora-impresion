@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 
 // GET - Obtener producto por ID
 export async function GET(
@@ -7,6 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const supabase = await createClient()
     const { id } = await params
 
     // Obtener producto
@@ -84,6 +85,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const supabase = await createClient()
     const { id } = await params
     const body = await request.json()
 
@@ -160,6 +162,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const supabase = await createClient()
     const { id } = await params
 
     const { error } = await supabase

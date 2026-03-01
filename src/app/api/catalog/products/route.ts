@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 
 // GET - Obtener todos los productos
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await createClient()
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const featured = searchParams.get('featured')
@@ -76,7 +77,7 @@ export async function GET(request: NextRequest) {
     // Filtrar por tag si se especifica
     let filteredProducts = enrichedProducts
     if (tag) {
-      filteredProducts = enrichedProducts.filter((p: any) => 
+      filteredProducts = enrichedProducts.filter((p: any) =>
         p.tags?.some((t: any) => t.slug === tag)
       )
     }
@@ -93,8 +94,9 @@ export async function GET(request: NextRequest) {
 // POST - Crear nuevo producto
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient()
     const body = await request.json()
-    
+
     // Extraer tags e imágenes si existen
     const { tags, images, ...productData } = body
 

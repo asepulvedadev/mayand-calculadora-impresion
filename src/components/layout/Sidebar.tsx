@@ -2,29 +2,35 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
   LayoutDashboard,
+  PanelTop,
   FolderOpen,
   Calculator,
   Scissors,
   Settings,
   Layers,
+  Users,
   Menu,
   X,
   ChevronLeft,
   ChevronRight,
+  LogOut,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Landing', href: '/admin/landing', icon: PanelTop },
   { name: 'Catálogo', href: '/admin/catalogo', icon: FolderOpen },
   { name: 'Impresión', href: '/admin/calculadora', icon: Calculator },
   { name: 'Corte Láser', href: '/admin/corte-laser', icon: Scissors },
   { name: 'Config. Láser', href: '/admin/configuracion-laser', icon: Settings },
   { name: 'Materiales', href: '/admin/materiales', icon: Layers },
+  { name: 'Usuarios', href: '/admin/usuarios', icon: Users },
 ];
 
 interface SidebarProps {
@@ -36,6 +42,8 @@ export function Sidebar({ collapsed = false, onCollapsedChange }: SidebarProps) 
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const isAdmin = pathname !== '/';
+  const { user, profile, signOut } = useAuth();
+  const router = useRouter();
 
   const toggleCollapsed = () => {
     onCollapsedChange?.(!collapsed);
@@ -116,14 +124,50 @@ export function Sidebar({ collapsed = false, onCollapsedChange }: SidebarProps) 
             })}
           </nav>
 
-          {/* Footer */}
-          {!collapsed && (
-            <div className="p-4 border-t border-white/[0.06]">
-              <p className="text-[10px] text-white/20 text-center">
-                Mayand Admin
-              </p>
-            </div>
-          )}
+          {/* Footer - User info */}
+          <div className="border-t border-white/[0.06]">
+            {collapsed ? (
+              <div className="flex flex-col items-center gap-2 py-3">
+                {profile?.avatar_url ? (
+                  <Image src={profile.avatar_url} alt="" width={28} height={28} className="w-7 h-7 rounded-full object-cover border border-white/10" />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-[#458FFF]/20 flex items-center justify-center text-[#458FFF] text-xs font-bold">
+                    {(profile?.full_name || user?.email || '?').charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <button
+                  onClick={async () => { await signOut(); router.push('/login') }}
+                  className="p-1.5 text-white/20 hover:text-red-400 rounded-lg transition-colors"
+                  title="Cerrar sesión"
+                >
+                  <LogOut size={14} />
+                </button>
+              </div>
+            ) : (
+              <div className="p-3">
+                <div className="flex items-center gap-3">
+                  {profile?.avatar_url ? (
+                    <Image src={profile.avatar_url} alt="" width={32} height={32} className="w-8 h-8 rounded-full object-cover border border-white/10 shrink-0" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-[#458FFF]/20 flex items-center justify-center text-[#458FFF] text-xs font-bold shrink-0">
+                      {(profile?.full_name || user?.email || '?').charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-white/70 truncate">{profile?.full_name || 'Admin'}</p>
+                    <p className="text-[10px] text-white/30 truncate">{user?.email}</p>
+                  </div>
+                  <button
+                    onClick={async () => { await signOut(); router.push('/login') }}
+                    className="p-1.5 text-white/20 hover:text-red-400 rounded-lg transition-colors shrink-0"
+                    title="Cerrar sesión"
+                  >
+                    <LogOut size={14} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

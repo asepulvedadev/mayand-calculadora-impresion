@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LaserMaterial, LaserQuote, LaserQuoteInput } from '@/types/laser';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * Función para calcular la cotización de corte láser
@@ -145,6 +145,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener material desde Supabase
+    const supabase = await createClient()
     const { data: material, error: materialError } = await supabase
       .from('laser_materials')
       .select('*')
