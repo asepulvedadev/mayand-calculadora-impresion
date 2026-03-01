@@ -1,17 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Email, Phone, LocationOn, AccessTime, Send } from '@mui/icons-material';
+import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
 
 export function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    service: 'impresion',
-    message: ''
-  });
-
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', service: 'impresion', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
@@ -21,126 +14,104 @@ export function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simular envío del formulario
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
     setSubmitStatus('success');
     setIsSubmitting(false);
     setFormData({ name: '', email: '', phone: '', service: 'impresion', message: '' });
-    
-    // Resetear estado después de 3 segundos
     setTimeout(() => setSubmitStatus('idle'), 3000);
   };
 
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: 'Teléfono',
-      value: `+52 ${whatsappNumber}`,
-      href: `https://wa.me/${whatsappNumber}`
-    },
-    {
-      icon: Email,
-      title: 'Email',
-      value: `ventas@${domain}`,
-      href: `mailto:ventas@${domain}`
-    },
-    {
-      icon: LocationOn,
-      title: 'Dirección',
-      value: 'Av. Principal 123, Ciudad de México',
-      href: '#'
-    },
-    {
-      icon: AccessTime,
-      title: 'Horario',
-      value: 'Lun - Vie: 9am - 6pm',
-      href: '#'
-    }
+  const contactCards = [
+    { icon: Phone, label: 'Teléfono', value: `+52 ${whatsappNumber}`, href: `https://wa.me/${whatsappNumber}`, color: '#25D366' },
+    { icon: Mail, label: 'Email', value: `ventas@${domain}`, href: `mailto:ventas@${domain}`, color: '#458FFF' },
+    { icon: MapPin, label: 'Ubicación', value: 'Monterrey, N.L.', href: '#', color: '#A855F7' },
+    { icon: Clock, label: 'Horario', value: 'Lun-Vie 9am-6pm', href: '#', color: '#FFD700' },
   ];
 
   return (
-    <section id="contacto" className="max-w-[1300px] mx-auto px-6 py-32">
-      <div className="flex flex-col lg:flex-row gap-16">
-        {/* Información de contacto */}
-        <div className="lg:w-5/12">
-          <h2 className="text-white text-4xl md:text-5xl font-black tracking-tight mb-6">
-            Contáctanos
+    <section id="contacto" className="max-w-7xl mx-auto px-4 py-16 sm:py-24">
+      <div className="grid lg:grid-cols-5 gap-8 sm:gap-12">
+        {/* Left — info */}
+        <div className="lg:col-span-2">
+          <span className="text-[#458FFF] text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-2 block">Contacto</span>
+          <h2 className="text-white text-2xl sm:text-4xl font-black tracking-tight leading-[1.1] mb-3 sm:mb-4">
+            Hablemos de tu proyecto
           </h2>
-          <div className="h-2 w-32 bg-[#458FFF] rounded-full mb-8"></div>
-          <p className="text-white/60 text-lg mb-10">
-            ¿Tienes un proyecto en mente? Escríbenos y te ayudaremos a hacerlo realidad. Nuestro equipo de expertos está listo para asesorarte.
+          <p className="text-white/35 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8">
+            Nuestro equipo está listo para asesorarte. Escríbenos y te respondemos en menos de 24 horas.
           </p>
 
-          <div className="space-y-6">
-            {contactInfo.map((item, index) => (
+          <div className="grid grid-cols-2 lg:grid-cols-1 gap-2.5 sm:gap-3">
+            {contactCards.map((item) => (
               <a
-                key={index}
+                key={item.label}
                 href={item.href}
                 target={item.href.startsWith('http') ? '_blank' : '_self'}
                 rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="flex items-center gap-4 p-4 rounded-xl bg-[#1a1d2e]/40 border border-white/5 hover:border-[#458FFF]/50 transition-all group"
+                className="group flex items-center gap-3 p-3 sm:p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/10 transition-all"
               >
-                <div className="size-12 rounded-lg bg-[#458FFF]/20 flex items-center justify-center text-[#458FFF] group-hover:bg-[#458FFF] group-hover:text-white transition-all">
-                  <item.icon className="w-6 h-6" />
+                <div
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
+                  style={{ backgroundColor: item.color + '15', color: item.color }}
+                >
+                  <item.icon size={16} />
                 </div>
-                <div>
-                  <p className="text-white/50 text-sm uppercase tracking-wider font-medium">{item.title}</p>
-                  <p className="text-white font-semibold">{item.value}</p>
+                <div className="min-w-0">
+                  <p className="text-white/30 text-[9px] sm:text-[10px] uppercase tracking-wider font-medium">{item.label}</p>
+                  <p className="text-white text-xs sm:text-sm font-semibold truncate">{item.value}</p>
                 </div>
               </a>
             ))}
           </div>
         </div>
 
-        {/* Formulario */}
-        <div className="lg:w-7/12">
-          <form onSubmit={handleSubmit} className="p-8 rounded-3xl bg-[#1a1d2e]/40 border border-white/10">
-            <h3 className="text-2xl font-bold text-white mb-6">Envíanos un mensaje</h3>
-            
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+        {/* Right — form */}
+        <div className="lg:col-span-3">
+          <form onSubmit={handleSubmit} className="p-5 sm:p-7 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+            <h3 className="text-white text-base sm:text-lg font-bold mb-5 sm:mb-6">Envíanos un mensaje</h3>
+
+            <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Nombre completo *</label>
+                <label className="block text-white/40 text-[10px] sm:text-xs font-medium mb-1.5 uppercase tracking-wider">Nombre *</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-[#0a0c10] border border-white/10 text-white placeholder-white/30 focus:border-[#458FFF] focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/20 focus:border-[#458FFF]/40 focus:outline-none transition-colors"
                   placeholder="Tu nombre"
                 />
               </div>
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Email *</label>
+                <label className="block text-white/40 text-[10px] sm:text-xs font-medium mb-1.5 uppercase tracking-wider">Email *</label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-[#0a0c10] border border-white/10 text-white placeholder-white/30 focus:border-[#458FFF] focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/20 focus:border-[#458FFF]/40 focus:outline-none transition-colors"
                   placeholder="tu@email.com"
                 />
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Teléfono</label>
+                <label className="block text-white/40 text-[10px] sm:text-xs font-medium mb-1.5 uppercase tracking-wider">Teléfono</label>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-[#0a0c10] border border-white/10 text-white placeholder-white/30 focus:border-[#458FFF] focus:outline-none transition-colors"
-                  placeholder="+52 (55) 0000-0000"
+                  className="w-full px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/20 focus:border-[#458FFF]/40 focus:outline-none transition-colors"
+                  placeholder="+52 (81) 0000-0000"
                 />
               </div>
               <div>
-                <label className="block text-white/70 text-sm font-medium mb-2">Servicio de interés</label>
+                <label className="block text-white/40 text-[10px] sm:text-xs font-medium mb-1.5 uppercase tracking-wider">Servicio</label>
                 <select
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-[#0a0c10] border border-white/10 text-white focus:border-[#458FFF] focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm focus:border-[#458FFF]/40 focus:outline-none transition-colors"
                 >
                   <option value="impresion">Impresión Gran Formato</option>
                   <option value="laser">Corte Láser</option>
@@ -150,14 +121,14 @@ export function ContactSection() {
               </div>
             </div>
 
-            <div className="mb-8">
-              <label className="block text-white/70 text-sm font-medium mb-2">Mensaje *</label>
+            <div className="mb-5 sm:mb-6">
+              <label className="block text-white/40 text-[10px] sm:text-xs font-medium mb-1.5 uppercase tracking-wider">Mensaje *</label>
               <textarea
                 required
-                rows={4}
+                rows={3}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg bg-[#0a0c10] border border-white/10 text-white placeholder-white/30 focus:border-[#458FFF] focus:outline-none transition-colors resize-none"
+                className="w-full px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/20 focus:border-[#458FFF]/40 focus:outline-none transition-colors resize-none"
                 placeholder="Cuéntanos sobre tu proyecto..."
               />
             </div>
@@ -165,24 +136,24 @@ export function ContactSection() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 rounded-xl bg-[#458FFF] text-white font-bold text-lg hover:bg-[#458FFF]/90 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-3 sm:py-3.5 rounded-xl bg-[#458FFF] text-white font-bold text-sm hover:bg-[#3a7de6] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   Enviando...
                 </>
               ) : (
                 <>
-                  <Send className="w-5 h-5" />
+                  <Send size={15} />
                   Enviar Mensaje
                 </>
               )}
             </button>
 
             {submitStatus === 'success' && (
-              <p className="text-center text-green-400 mt-4 font-medium">
-                ✓ Mensaje enviado exitosamente. Te contactaremos pronto.
+              <p className="text-center text-emerald-400 mt-3 text-xs font-medium">
+                Mensaje enviado. Te contactaremos pronto.
               </p>
             )}
           </form>

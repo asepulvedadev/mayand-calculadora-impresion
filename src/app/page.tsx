@@ -11,9 +11,9 @@ import { Footer } from '@/components/landing/Footer';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#110363]">
+    <div className="min-h-screen bg-[#080422]">
       <Header />
-      <main className="flex-1">
+      <main>
         <Hero />
         <ServicesSection />
         <PortfolioSection />

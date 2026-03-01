@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Sidebar } from './Sidebar';
 
 interface DashboardLayoutProps {
@@ -7,14 +8,13 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  return (
-    <div className="min-h-screen flex" style={{ backgroundColor: '#110363' }}>
-      {/* Sidebar */}
-      <Sidebar />
+  const [collapsed, setCollapsed] = useState(false);
 
-      {/* Main content */}
-      <div className="flex-1 lg:ml-64">
-        <main className="min-h-screen">
+  return (
+    <div className="min-h-screen flex bg-[#080422]">
+      <Sidebar collapsed={collapsed} onCollapsedChange={setCollapsed} />
+      <div className="flex-1 min-w-0">
+        <main className="min-h-screen p-4 sm:p-6 lg:p-8">
           {children}
         </main>
       </div>

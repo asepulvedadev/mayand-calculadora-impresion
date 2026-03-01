@@ -2,9 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { X, CloudUpload, Save, Plus, Trash2 } from 'lucide-react'
-import { CircularProgress } from '@mui/material'
-import { Close, Add, Delete } from '@mui/icons-material'
+import { X, CloudUpload, Save, Plus, Trash2, Loader2 } from 'lucide-react'
 import { uploadProductImage, getProductImageUrl } from '@/lib/storage'
 import { CategoryType } from '@/types'
 
@@ -56,7 +54,7 @@ interface ProductFormData {
 }
 
 interface ProductFormProps {
-  product?: ProductFormData & { 
+  product?: ProductFormData & {
     id: string
     images?: { id: string; url: string }[]
     tags?: Tag[]
@@ -77,6 +75,9 @@ const CATEGORY_TYPES: { value: CategoryType; label: string }[] = [
   { value: 'general', label: 'General' },
 ]
 
+const inputClass = 'w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white text-sm placeholder-white/20 focus:border-[#458FFF]/40 focus:outline-none transition-colors'
+const labelClass = 'block text-[10px] sm:text-xs font-medium text-white/40 mb-1.5 uppercase tracking-wider'
+
 export default function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) {
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -84,17 +85,15 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
   const [materials, setMaterials] = useState<Material[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
-  
-  // Imágenes múltiples
+
   const [images, setImages] = useState<ProductImage[]>([])
   const fileInputRefs = useRef<(HTMLInputElement | null)[]>([])
-  
-  // Nueva categoría
+
   const [showNewCategory, setShowNewCategory] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState('')
   const [newCategoryType, setNewCategoryType] = useState<CategoryType>('general')
   const [newCategoryColor, setNewCategoryColor] = useState('#458FFF')
-  
+
   const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState<ProductFormData>({
@@ -116,7 +115,6 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
     is_featured: false,
   })
 
-  // Cargar categorías, materiales y tags
   useEffect(() => {
     async function fetchData() {
       const [catsRes, matsRes, tagsRes] = await Promise.all([
@@ -136,7 +134,6 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
     fetchData()
   }, [])
 
-  // Cargar datos del producto si se está editando
   useEffect(() => {
     if (product) {
       setFormData({
@@ -159,12 +156,10 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
         is_featured: product.is_featured ?? false,
       })
 
-      // Cargar tags seleccionados
       if (product.tags) {
         setSelectedTags(product.tags.map((t: Tag) => t.id))
       }
 
-      // Cargar imágenes existentes
       const existingImages: ProductImage[] = []
       if (product.image_url) {
         existingImages.push({ url: product.image_url })
@@ -183,14 +178,12 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
   const handleFileChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Validar tipo
       const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
       if (!validTypes.includes(file.type)) {
         setError('Tipo de archivo no válido. Solo se permiten JPG, PNG, GIF y WebP.')
         return
       }
 
-      // Validar tamaño (5MB)
       if (file.size > 5 * 1024 * 1024) {
         setError('Archivo demasiado grande. Máximo 5MB.')
         return
@@ -226,7 +219,7 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
 
     try {
       const slug = newCategoryName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-      
+
       const res = await fetch('/api/catalog/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -244,8 +237,7 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
       }
 
       const data = await res.json()
-      
-      // Agregar la nueva categoría a la lista
+
       setCategories([...categories, data.category])
       setFormData({ ...formData, category_id: data.category.id })
       setShowNewCategory(false)
@@ -262,12 +254,11 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
     setError(null)
 
     try {
-      // Subir imágenes
       const uploadedUrls: string[] = []
-      
+
       for (let i = 0; i < images.length; i++) {
         const img = images[i]
-        
+
         if (img.file) {
           setUploading(true)
           const uploadResult = await uploadProductImage(img.file, formData.name)
@@ -324,21 +315,19 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400">
+        <div className="p-3.5 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
           {error}
         </div>
       )}
 
-      {/* Imágenes múltiples */}
+      {/* Images */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Imágenes del producto (hasta 3)
-        </label>
-        <div className="grid grid-cols-3 gap-4">
+        <label className={labelClass}>Imágenes (hasta 3)</label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {images.map((img, index) => (
-            <div key={index} className="relative aspect-square bg-gray-800 rounded-lg overflow-hidden border-2 border-dashed border-gray-600 group">
+            <div key={index} className="relative aspect-square bg-white/[0.04] rounded-xl overflow-hidden border border-dashed border-white/[0.1] group">
               {img.preview || img.url ? (
                 <>
                   <Image
@@ -350,15 +339,15 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
                   <button
                     type="button"
                     onClick={() => removeImage(index)}
-                    className="absolute top-2 right-2 p-1 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-2 right-2 p-1.5 bg-red-500/80 backdrop-blur-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                   >
-                    <Trash2 fontSize="small" className="text-white" />
+                    <Trash2 size={12} className="text-white" />
                   </button>
                 </>
               ) : (
-                <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
-                  <CloudUpload fontSize="large" className="text-gray-500 mb-2" />
-                  <span className="text-xs text-gray-500">Foto {index + 1}</span>
+                <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer hover:bg-white/[0.02] transition-colors">
+                  <CloudUpload size={20} className="text-white/15 mb-1.5" />
+                  <span className="text-[10px] text-white/20">Foto {index + 1}</span>
                   <input
                     ref={(el) => { fileInputRefs.current[index] = el }}
                     type="file"
@@ -370,83 +359,74 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
               )}
             </div>
           ))}
-          
-          {/* Botón para agregar más imágenes */}
+
           {images.length < 3 && (
             <button
               type="button"
               onClick={addImageSlot}
-              className="aspect-square bg-gray-800 rounded-lg border-2 border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-blue-500 transition-colors"
+              className="aspect-square bg-white/[0.02] rounded-xl border border-dashed border-white/[0.08] flex flex-col items-center justify-center hover:border-[#458FFF]/30 hover:bg-white/[0.03] transition-all"
             >
-              <Plus fontSize="large" className="text-gray-500 mb-2" />
-              <span className="text-xs text-gray-500">Agregar</span>
+              <Plus size={20} className="text-white/15 mb-1" />
+              <span className="text-[10px] text-white/20">Agregar</span>
             </button>
           )}
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          JPG, PNG, GIF o WebP. Máximo 5MB cada una.
-        </p>
+        <p className="text-[10px] text-white/15 mt-2">JPG, PNG, GIF o WebP. Máximo 5MB.</p>
       </div>
 
-      {/* Nombre */}
+      {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">
-          Nombre del producto *
-        </label>
+        <label className={labelClass}>Nombre *</label>
         <input
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
-          className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className={inputClass}
           placeholder="Ej: Trofeo de Acrílico"
         />
       </div>
 
-      {/* Descripción */}
+      {/* Description */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">
-          Descripción *
-        </label>
+        <label className={labelClass}>Descripción *</label>
         <textarea
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           required
           rows={3}
-          className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          className={`${inputClass} resize-none`}
           placeholder="Describe el producto..."
         />
       </div>
 
-      {/* Categoría */}
+      {/* Category */}
       <div>
-        <div className="flex items-center justify-between mb-1">
-          <label className="block text-sm font-medium text-gray-300">
-            Categoría *
-          </label>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className={`${labelClass} mb-0`}>Categoría *</label>
           <button
             type="button"
             onClick={() => setShowNewCategory(!showNewCategory)}
-            className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1"
+            className="text-[10px] text-[#458FFF]/60 hover:text-[#458FFF] flex items-center gap-0.5 transition-colors"
           >
-            <Plus fontSize="small" /> Nueva categoría
+            <Plus size={12} /> Nueva
           </button>
         </div>
-        
+
         {showNewCategory && (
-          <div className="mb-3 p-3 bg-gray-800/50 rounded-lg border border-gray-700">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="mb-3 p-3 bg-white/[0.03] rounded-xl border border-white/[0.06]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               <input
                 type="text"
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
-                placeholder="Nombre de categoría"
-                className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm"
+                placeholder="Nombre"
+                className={inputClass}
               />
               <select
                 value={newCategoryType}
                 onChange={(e) => setNewCategoryType(e.target.value as CategoryType)}
-                className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm"
+                className={inputClass}
               >
                 {CATEGORY_TYPES.map(type => (
                   <option key={type.value} value={type.value}>{type.label}</option>
@@ -457,12 +437,12 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
                   type="color"
                   value={newCategoryColor}
                   onChange={(e) => setNewCategoryColor(e.target.value)}
-                  className="w-10 h-10 rounded cursor-pointer"
+                  className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border border-white/[0.08]"
                 />
                 <button
                   type="button"
                   onClick={handleCreateCategory}
-                  className="flex-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm"
+                  className="flex-1 px-3 py-2 bg-[#458FFF] hover:bg-[#3a7de6] text-white rounded-xl text-sm font-medium transition-colors"
                 >
                   Crear
                 </button>
@@ -470,12 +450,12 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
             </div>
           </div>
         )}
-        
+
         <select
           value={formData.category_id}
           onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
           required
-          className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className={inputClass}
         >
           <option value="">Seleccionar categoría</option>
           {categories.map((cat) => (
@@ -488,14 +468,12 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
 
       {/* Material */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">
-          Material *
-        </label>
+        <label className={labelClass}>Material *</label>
         <select
           value={formData.material_id}
           onChange={(e) => setFormData({ ...formData, material_id: e.target.value })}
           required
-          className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className={inputClass}
         >
           <option value="">Seleccionar material</option>
           {materials.map((mat) => (
@@ -506,42 +484,35 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
         </select>
       </div>
 
-      {/* Dimensiones y Calibre */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Dimensions & Thickness */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Dimensiones *
-          </label>
+          <label className={labelClass}>Dimensiones *</label>
           <input
             type="text"
             value={formData.dimensions}
             onChange={(e) => setFormData({ ...formData, dimensions: e.target.value })}
             required
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={inputClass}
             placeholder="Ej: 20 x 15 x 5 cm"
           />
         </div>
-
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Calibre/Grosor
-          </label>
+          <label className={labelClass}>Calibre/Grosor</label>
           <input
             type="text"
             value={formData.thickness}
             onChange={(e) => setFormData({ ...formData, thickness: e.target.value })}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={inputClass}
             placeholder="Ej: 6 mm"
           />
         </div>
       </div>
 
-      {/* Precios */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Prices */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Precio Menudeo *
-          </label>
+          <label className={labelClass}>Precio Menudeo *</label>
           <input
             type="number"
             step="0.01"
@@ -549,66 +520,55 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
             value={formData.price}
             onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
             required
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={inputClass}
             placeholder="0.00"
           />
         </div>
-
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Precio Mayoreo
-          </label>
+          <label className={labelClass}>Precio Mayoreo</label>
           <input
             type="number"
             step="0.01"
             min="0"
             value={formData.price_wholesale || ''}
             onChange={(e) => setFormData({ ...formData, price_wholesale: e.target.value ? parseFloat(e.target.value) : null })}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={inputClass}
             placeholder="0.00"
           />
         </div>
-
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Cantidad mínima mayoreo
-          </label>
+          <label className={labelClass}>Cant. mín. mayoreo</label>
           <input
             type="number"
             min="1"
             value={formData.wholesale_min_quantity}
             onChange={(e) => setFormData({ ...formData, wholesale_min_quantity: parseInt(e.target.value) || 1 })}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={inputClass}
             placeholder="10"
           />
         </div>
       </div>
 
-      {/* Unidad de precio y Stock */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Price unit & Stock */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Unidad de precio
-          </label>
+          <label className={labelClass}>Unidad de precio</label>
           <input
             type="text"
             value={formData.price_unit}
             onChange={(e) => setFormData({ ...formData, price_unit: e.target.value })}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={inputClass}
             placeholder="Ej: / pza"
           />
         </div>
-
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Stock
-          </label>
+          <label className={labelClass}>Stock</label>
           <input
             type="number"
             min="-1"
             value={formData.stock}
             onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || -1 })}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={inputClass}
             placeholder="-1 = infinito"
           />
         </div>
@@ -616,21 +576,19 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
 
       {/* Tags */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Tags
-        </label>
-        <div className="flex flex-wrap gap-2">
+        <label className={labelClass}>Tags</label>
+        <div className="flex flex-wrap gap-1.5">
           {tags.map((tag) => (
             <button
               key={tag.id}
               type="button"
               onClick={() => toggleTag(tag.id)}
-              className={`px-3 py-1 rounded-full text-sm transition-colors ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 selectedTags.includes(tag.id)
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'text-white'
+                  : 'bg-white/[0.04] text-white/30 hover:text-white/50 border border-white/[0.06]'
               }`}
-              style={selectedTags.includes(tag.id) ? { backgroundColor: tag.color || '#3B82F6' } : {}}
+              style={selectedTags.includes(tag.id) ? { backgroundColor: (tag.color || '#3B82F6') + '30', color: tag.color || '#3B82F6', borderWidth: 1, borderColor: (tag.color || '#3B82F6') + '40' } : {}}
             >
               {tag.name}
             </button>
@@ -639,73 +597,66 @@ export default function ProductForm({ product, onSuccess, onCancel }: ProductFor
       </div>
 
       {/* Badge */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Etiqueta (badge)
-          </label>
+          <label className={labelClass}>Etiqueta (badge)</label>
           <input
             type="text"
             value={formData.badge}
             onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={inputClass}
             placeholder="Ej: Nuevo"
           />
         </div>
-
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Color de etiqueta
-          </label>
+          <label className={labelClass}>Color de etiqueta</label>
           <input
             type="color"
             value={formData.badge_color}
             onChange={(e) => setFormData({ ...formData, badge_color: e.target.value })}
-            className="w-full h-10 px-2 py-1 bg-gray-800 border border-gray-700 rounded-lg text-white"
+            className="w-full h-10 px-2 py-1 bg-white/[0.04] border border-white/[0.08] rounded-xl"
           />
         </div>
       </div>
 
       {/* Checkboxes */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-5">
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
             checked={formData.is_active}
             onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-            className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+            className="w-4 h-4 rounded border-white/[0.15] bg-white/[0.04] text-[#458FFF] focus:ring-[#458FFF]/30"
           />
-          <span className="text-gray-300">Producto activo</span>
+          <span className="text-white/40 text-sm">Activo</span>
         </label>
-
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
             checked={formData.is_featured}
             onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
-            className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+            className="w-4 h-4 rounded border-white/[0.15] bg-white/[0.04] text-[#FFD700] focus:ring-[#FFD700]/30"
           />
-          <span className="text-gray-300">Producto destacado</span>
+          <span className="text-white/40 text-sm">Destacado</span>
         </label>
       </div>
 
-      {/* Botones */}
-      <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-700">
+      {/* Actions */}
+      <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-white/[0.06]">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
+          className="px-4 py-2.5 text-white/30 hover:text-white/60 text-sm transition-colors rounded-xl"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={loading || uploading}
-          className="flex items-center gap-2 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#458FFF] hover:bg-[#3a7de6] text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
         >
-          {(loading || uploading) && <CircularProgress size={24} className="animate-spin" />}
-          <Save size={18} />
-          {product?.id ? 'Actualizar' : 'Crear'} producto
+          {(loading || uploading) ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+          {product?.id ? 'Actualizar' : 'Crear'}
         </button>
       </div>
     </form>

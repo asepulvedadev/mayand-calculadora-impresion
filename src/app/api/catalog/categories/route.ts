@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from('catalog_categories')
-      .select('id, name, slug, icon, sort_order')
+      .select('id, name, slug, icon, sort_order, is_active, color, image_url')
       .order('sort_order')
 
     if (type) {

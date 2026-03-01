@@ -1,136 +1,127 @@
 'use client';
 
 import { useState } from 'react';
-import { Visibility } from '@mui/icons-material';
+import { Eye } from 'lucide-react';
 
-const categories = ['Todo', 'Corte Láser', 'Lonas y Vinilos', 'Proyectos Especiales'];
+const CATEGORIES = ['Todo', 'Corte Láser', 'Lonas y Vinilos', 'Especiales'];
 
-const projects = [
+const PROJECTS = [
   {
     id: 'PRINT-990',
     title: 'Publicidad Monumental',
     category: 'Lonas y Vinilos',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEecFbsUeDStdI-tb4EAkU0iw6w73GSMOQVGfkWI-oSK4Ui0sANpJC-OxXWzmhNIM1WYQOXjpaEWWI7jeRYKhVElJAJkA7WN2lSXePosZoyLhcWxiFc0eCvt0TWukIM6Y-1Por3DRaeXTiAoO7b-gZl3NoR8LIFhsTPiGpboTd12lIHidDe4A0SDc-vSQ1PAXArats5O-tmELGMRfr7rXXkaoVzX52HVxdDwYFneLZWfiSn21dogN6Q_99w07N_xkHWNiB_UO1UQQ',
-    size: 'lg:col-span-8',
-    height: 'min-h-[500px]',
-    description: 'Instalación de lona microperforada de alta resistencia para fachada corporativa.'
+    span: 'col-span-2 row-span-2',
+    desc: 'Lona microperforada de alta resistencia para fachada corporativa.'
   },
   {
     id: 'LSR-102',
     title: 'Patrones Geométricos',
-    category: 'Corte Lásico',
+    category: 'Corte Láser',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDVUpd8zPnt3HjEqTFtEqZQlHJk4Gp5qU06r0Jgg3OqxIbYxiOBArm3uL9wYbKIenT_xXBSxdFNaDPdbwNF-OtQANZDZWOrwxbUtZn6rbKZmIqN3uGI_B9IS6fclKXSpvd70R34Aw4EpQo2z1vVouxJSwHsCks9rIfzV-CAXa2ClTZSoiA9t56M5VEXvOpaCos4cbGjyeB09AFugRKVjOOZS5PQ-Kf7qNgFviShg0PTfVEWIY0P1E2dpFbs2G-vVJx6euGqBrridFE',
-    size: 'lg:col-span-4',
-    height: 'min-h-[500px]',
-    description: 'Celosía en madera industrial para división de espacios interiores.'
+    span: 'col-span-1 row-span-1',
+    desc: 'Celosía en madera industrial para interiores.'
   },
   {
     id: 'SP-304',
     title: 'Grabado Acrílico',
-    category: 'Proyectos Especiales',
+    category: 'Especiales',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCe5LjNsRm4tROM-r8CZuDgfVNSjJQ1sxRrGXsBdip_BAkT7Zgo9s5cT51cjat1F58vC0rkN2gH5ofEqT4wzVnMTBe9LfUeTiVAzbL4VcK9azsMFf0mp60sTPsj9QW8h4nyBCzZJ16-ViJ_E2NYFffs7UMuMopD048FgOpuXE1DkgplHoq4AhK4YnWScWWMsH-InwjikYLOLXt3YtXUvXp7Bnp5zGblMv2HCgnn39H-BjWgNhmTycxQib4i1ydt2oUBzoHBXgfGZLU',
-    size: 'lg:col-span-4',
-    height: 'min-h-[450px]',
-    description: 'Detalle de grabado láser sobre acrílico cristal de 10mm.'
+    span: 'col-span-1 row-span-1',
+    desc: 'Grabado láser sobre acrílico cristal de 10mm.'
   },
   {
     id: 'PRINT-882',
     title: 'Gráficos de Exhibición',
     category: 'Lonas y Vinilos',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBOowvFF8YwwzPWnRgKAg-8m3WNuLFsXFC710JL6cG25Ipiiz0qmopsYslQy4vbsnx85YeoQoIMF0VPnE_lGwhzqCH4SLthtBkTggOeMs9hbRF2QzpD8bdSdaYXQ88W_HadbJlv7mUySffECmL3VE7JZMaji9jK7JFGYf3PC7nBV-PNIhXrFkcj0WP1KQjAY94koPDUmBBe0uaxxytPd4tXaAtKcW_rEfhirdB-jrhbJt3PsJZziUH2pNRDCnBDYjXjBKmYexuwZ3c',
-    size: 'lg:col-span-4',
-    height: 'min-h-[450px]',
-    description: 'Impresión en lona frontlit para eventos de gran concurrencia.'
+    span: 'col-span-1 row-span-1',
+    desc: 'Lona frontlit para eventos de gran concurrencia.'
   },
   {
     id: 'VINYL-201',
     title: 'Rotulación Vehicular',
     category: 'Lonas y Vinilos',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB-TskCO92k_W92_qW7SYmaou8eNINSqwKjvles-uU5aAP1fQ8-cOEahOT4U1RIF9gNYiaSdPi9sc1p7QoxMF5gPtx4PD4slCJogveYxBUno61AGx9KMsm2yGPZT8yZWQwLq-AFz2_Gx9SQcoqCczcVMPWNc6Cf_fsgfFf_s7a3RyQPl-zFFBlfNVQ8qXQDcNRXCnJKvn5uXt0F6K2Xe_Yn-l5JXtHsHqHGGUY7YVMgCZXToRH9cziHCJPs2DO67IM9eol-ih_cUks',
-    size: 'lg:col-span-4',
-    height: 'min-h-[450px]',
-    description: 'Vinil fundido de alta adherencia para flotas comerciales.'
-  }
+    span: 'col-span-1 row-span-1',
+    desc: 'Vinil fundido de alta adherencia para flotas.'
+  },
 ];
 
 export function PortfolioSection() {
-  const [activeCategory, setActiveCategory] = useState('Todo');
+  const [active, setActive] = useState('Todo');
 
-  const filteredProjects = activeCategory === 'Todo' 
-    ? projects 
-    : projects.filter(p => p.category === activeCategory);
+  const filtered = active === 'Todo' ? PROJECTS : PROJECTS.filter(p => p.category === active);
 
   return (
-    <section id="portafolio" className="max-w-[1400px] mx-auto px-6 py-24">
+    <section id="portafolio" className="max-w-7xl mx-auto px-4 py-16 sm:py-24">
       {/* Header */}
-      <div className="mb-12 border-l-8 border-[#458FFF] pl-8">
-        <div className="flex flex-col gap-2">
-          <span className="text-[#FFD700] font-bold tracking-[0.3em] uppercase text-sm">
-            Catálogo Industrial
-          </span>
-          <h2 className="text-white text-5xl md:text-7xl font-black leading-[0.9] tracking-tighter uppercase">
-            Portafolio de <br/>Proyectos
-          </h2>
-          <p className="text-white/60 text-lg max-w-2xl mt-4 font-medium leading-relaxed">
-            Especialistas en impresión de gran formato y corte láser de alta precisión. 
-            Transformamos materiales industriales en soluciones visuales de alto impacto.
-          </p>
-        </div>
+      <div className="mb-8 sm:mb-12">
+        <span className="text-[#FFD700] text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-2 block">Proyectos</span>
+        <h2 className="text-white text-2xl sm:text-4xl md:text-5xl font-black tracking-tight leading-[1.1] mb-4 sm:mb-6">
+          Portafolio
+        </h2>
+        <p className="text-white/35 text-xs sm:text-sm max-w-lg leading-relaxed">
+          Impresión de gran formato y corte láser de alta precisión. Transformamos materiales en soluciones visuales de impacto.
+        </p>
       </div>
 
-      {/* Category Filters */}
-      <div className="flex flex-wrap gap-1 mb-12 border-b border-white/10 pb-4">
-        {categories.map((category) => (
+      {/* Category tabs */}
+      <div className="flex gap-1.5 mb-6 sm:mb-8 overflow-x-auto no-scrollbar pb-1">
+        {CATEGORIES.map((cat) => (
           <button
-            key={category}
-            onClick={() => setActiveCategory(category)}
-            className={`flex h-12 cursor-pointer items-center justify-center px-6 text-xs font-bold uppercase tracking-widest transition-all rounded-lg ${
-              activeCategory === category
+            key={cat}
+            onClick={() => setActive(cat)}
+            className={`shrink-0 px-3.5 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+              active === cat
                 ? 'bg-[#458FFF] text-white'
-                : 'bg-transparent text-white/60 hover:text-white hover:bg-white/10'
+                : 'bg-white/[0.04] text-white/40 hover:bg-white/[0.08] active:bg-white/[0.1]'
             }`}
           >
-            {category}
+            {cat}
           </button>
         ))}
       </div>
 
-      {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-1">
-        {filteredProjects.map((project) => (
+      {/* Grid — bento-style on desktop, stacked on mobile */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 auto-rows-[160px] sm:auto-rows-[200px] md:auto-rows-[220px]">
+        {filtered.map((project) => (
           <div
             key={project.id}
-            className={`${project.size} ${project.height} group relative overflow-hidden bg-white/5 border border-white/10 min-h-[400px]`}
+            className={`${project.span} group relative overflow-hidden rounded-xl sm:rounded-2xl cursor-pointer`}
           >
-            {/* Background Image */}
+            {/* Image */}
             <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
               style={{ backgroundImage: `url("${project.image}")` }}
             />
-            
-            {/* ID Badge */}
-            <div className="absolute top-0 left-0 p-6 bg-[#110363]/90 backdrop-blur-sm">
-              <span className="text-[#FFD700] text-[10px] font-bold tracking-widest uppercase">
+
+            {/* Always-visible gradient at bottom */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+            {/* ID tag */}
+            <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
+              <span className="px-2 py-0.5 bg-black/40 backdrop-blur-sm rounded text-[9px] sm:text-[10px] text-[#FFD700] font-bold tracking-wider uppercase">
                 {project.id}
               </span>
             </div>
 
-            {/* Hover Overlay */}
-            <div className="absolute inset-0 bg-[#110363]/0 group-hover:bg-[#110363]/60 transition-all duration-300 flex flex-col justify-end p-8">
-              <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
-                <span className="bg-[#458FFF] text-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest inline-block mb-3">
-                  {project.category}
-                </span>
-                <h3 className="text-white text-2xl md:text-3xl font-black uppercase mt-1">
-                  {project.title}
-                </h3>
-                <p className="text-white/80 text-sm mt-2 max-w-md">
-                  {project.description}
-                </p>
-                <button className="flex items-center gap-2 text-[#FFD700] mt-4 text-sm font-semibold uppercase tracking-wider hover:text-white transition-colors">
-                  <Visibility className="w-4 h-4" />
-                  Ver Proyecto
-                </button>
+            {/* Hover overlay */}
+            <div className="absolute inset-0 bg-[#080422]/0 group-hover:bg-[#080422]/50 transition-all duration-300" />
+
+            {/* Info — always visible at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+              <h3 className="text-white font-bold text-xs sm:text-sm md:text-base leading-tight mb-0.5">
+                {project.title}
+              </h3>
+              <p className="text-white/50 text-[10px] sm:text-xs line-clamp-1 sm:line-clamp-2">
+                {project.desc}
+              </p>
+
+              {/* Hover detail */}
+              <div className="flex items-center gap-1.5 text-[#458FFF] text-[10px] sm:text-xs font-semibold mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <Eye size={12} />
+                Ver proyecto
               </div>
             </div>
           </div>
