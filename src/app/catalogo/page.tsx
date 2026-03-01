@@ -320,7 +320,7 @@ export default function CatalogoPage() {
               {featuredProducts.slice(0, 4).map((product) => (
                 <Link
                   key={product.id}
-                  href={`/catalogo/${product.id}`}
+                  href={`/catalogo/${product.slug}`}
                   className="group overflow-hidden rounded-2xl border border-[#FFD700]/15 bg-gradient-to-br from-[#FFD700]/[0.06] to-transparent transition-all hover:border-[#FFD700]/30"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
@@ -384,7 +384,7 @@ export default function CatalogoPage() {
               {filteredProducts.map((product) => (
                 <Link
                   key={product.id}
-                  href={`/catalogo/${product.id}`}
+                  href={`/catalogo/${product.slug}`}
                   className="group rounded-xl sm:rounded-2xl bg-white/[0.02] border border-white/[0.06] overflow-hidden hover:bg-white/[0.04] hover:border-white/[0.12] transition-all duration-200"
                 >
                   <div className="relative aspect-square overflow-hidden bg-white/[0.02]">

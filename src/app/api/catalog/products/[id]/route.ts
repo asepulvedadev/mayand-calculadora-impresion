@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-// GET - Obtener producto por ID
+// UUID v4 regex
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+// GET - Obtener producto por ID o slug
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -10,11 +13,14 @@ export async function GET(
     const supabase = await createClient()
     const { id } = await params
 
+    // Detect if param is UUID or slug
+    const column = UUID_RE.test(id) ? 'id' : 'slug'
+
     // Obtener producto
     const { data: product, error } = await supabase
       .from('catalog_products')
       .select('*')
-      .eq('id', id)
+      .eq(column, id)
       .single()
 
     if (error) {
@@ -28,7 +34,7 @@ export async function GET(
     // Obtener categoría
     const { data: category } = await supabase
       .from('catalog_categories')
-      .select('id, name, slug, category_type, color')
+      .select('id, name, slug, color')
       .eq('id', product.category_id)
       .single()
 
@@ -39,18 +45,18 @@ export async function GET(
       .eq('id', product.material_id)
       .single()
 
-    // Obtener imágenes
+    // Obtener imágenes (usar product.id real, no el param que puede ser slug)
     const { data: images } = await supabase
       .from('catalog_product_images')
       .select('*')
-      .eq('product_id', id)
+      .eq('product_id', product.id)
       .order('sort_order')
 
     // Obtener tags
     const { data: productTags } = await supabase
       .from('catalog_product_tags')
       .select('tag_id')
-      .eq('product_id', id)
+      .eq('product_id', product.id)
 
     let tags: any[] = []
     if (productTags && productTags.length > 0) {

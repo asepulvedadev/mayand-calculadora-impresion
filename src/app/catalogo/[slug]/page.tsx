@@ -42,7 +42,7 @@ interface Product {
 
 export default function ProductPage() {
   const params = useParams()
-  const id = params.id as string
+  const slug = params.slug as string
 
   const [product, setProduct] = useState<Product | null>(null)
   const [related, setRelated] = useState<Product[]>([])
@@ -55,7 +55,7 @@ export default function ProductPage() {
   useEffect(() => {
     async function fetchProduct() {
       try {
-        const res = await fetch(`/api/catalog/products/${id}`)
+        const res = await fetch(`/api/catalog/products/${slug}`)
         if (!res.ok) return
         const data = await res.json()
         if (data.product) {
@@ -66,7 +66,7 @@ export default function ProductPage() {
           if (relRes.ok) {
             const relData = await relRes.json()
             if (relData.products) {
-              setRelated(relData.products.filter((p: Product) => p.id !== id).slice(0, 3))
+              setRelated(relData.products.filter((p: Product) => p.id !== data.product.id).slice(0, 3))
             }
           }
         }
@@ -77,8 +77,8 @@ export default function ProductPage() {
       }
     }
 
-    if (id) fetchProduct()
-  }, [id])
+    if (slug) fetchProduct()
+  }, [slug])
 
   if (loading) {
     return (
@@ -348,7 +348,7 @@ export default function ProductPage() {
               {related.map((rel) => (
                 <Link
                   key={rel.id}
-                  href={`/catalogo/${rel.id}`}
+                  href={`/catalogo/${rel.slug}`}
                   className="group rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.06] overflow-hidden hover:bg-white/[0.04] hover:border-white/[0.12] transition-all"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
