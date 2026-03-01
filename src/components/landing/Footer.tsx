@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export function Footer() {
   const domain = process.env.NEXT_PUBLIC_DOMAIN || 'mayandmty.com';
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '8140076026';
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '528140076026';
 
   return (
     <footer className="w-full bg-[#050210] border-t border-white/[0.06]">

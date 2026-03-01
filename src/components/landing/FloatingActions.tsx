@@ -22,7 +22,7 @@ interface FloatingActionsProps {
 }
 
 export function FloatingActions({ sectionIds }: FloatingActionsProps) {
-  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '8140076026';
+  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '528140076026';
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAtBottom, setIsAtBottom] = useState(false);
 

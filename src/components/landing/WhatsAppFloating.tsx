@@ -15,7 +15,7 @@ function WhatsAppIcon({ size = 24 }: { size?: number }) {
 }
 
 export function WhatsAppFloating() {
-  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '8140076026';
+  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '528140076026';
 
   return (
     <a

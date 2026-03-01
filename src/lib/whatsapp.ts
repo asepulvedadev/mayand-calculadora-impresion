@@ -1,7 +1,7 @@
 import type { CartItem } from '@/lib/cart/CartContext'
 import type { Profile } from '@/types/auth'
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '8140076026'
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '528140076026'
 
 function getDate() {
   return new Date().toLocaleDateString('es-MX', {

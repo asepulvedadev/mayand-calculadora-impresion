@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { ArrowRight, ShoppingBag } from 'lucide-react';
 
 export function CTASection() {
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '8140076026';
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '528140076026';
 
   return (
     <section className="relative w-full h-[calc(100svh-56px)] sm:h-[calc(100svh-64px)] overflow-hidden">

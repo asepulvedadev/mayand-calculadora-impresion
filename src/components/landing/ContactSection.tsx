@@ -5,7 +5,7 @@ import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
 
 export function ContactSection() {
   const domain = process.env.NEXT_PUBLIC_DOMAIN || 'mayandmty.com';
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '8140076026';
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '528140076026';
 
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
